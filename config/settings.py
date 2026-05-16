@@ -27,7 +27,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Local Apps (생성한 앱들)
     'accounts',
-    'stocks',    
+    'stocks',
+    'tutors',
+    'community',    
 
     # 3rd Party Apps (DRF 등 외부 라이브러리)
     'rest_framework', 
@@ -119,3 +121,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model 설정 (필수!)
 AUTH_USER_MODEL = 'accounts.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication', # JWT 사용 시
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
