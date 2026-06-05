@@ -6,24 +6,25 @@ class Command(BaseCommand):
     help = '엑셀 파일에서 금융/경제 용어를 읽어 DB에 저장합니다.'
 
     def handle(self, *args, **options):
-        file_path = '../../../src/20260605_시사경제용어사전.xlsx'
-        # 실제 파일명으로 변경 필요
+        # 1. 파일명만 간결하게 지정 (해당 파일이 manage.py와 같은 폴더에 있어야 합니다!)
+        file_path = '../src/20260605_시사경제용어사전.xlsx'
         
         try:
             df = pd.read_excel(file_path)
         except FileNotFoundError:
-            self.stdout.write(self.style.ERROR("엑셀 파일을 찾을 수 없습니다."))
+            self.stdout.write(self.style.ERROR(f"'{file_path}' 파일을 찾을 수 없습니다. manage.py와 동일한 폴더에 파일이 있는지 확인해 주세요."))
             return
 
-        # '금융/경제' 카테고리만 필터링
-        filtered_df = df[df['카테고리'] == '금융/경제']
+        # 2. Pandas OR 조건 문법 수정 (괄호와 비트 연산자 '|' 사용)
+        filtered_df = df[(df['주제'] == '금융') | (df['주제'] == '경제')]
 
         terms_to_create = []
-        for index, row in filtered_df.iterrows():
+        # .dropna(subset=['용어', '설명']) 등을 추가해 빈 값이 들어가는 것을 방지하면 더 안전합니다.
+        for index, row in filtered_df.dropna(subset=['용어', '설명']).iterrows():
             terms_to_create.append(
                 Term(
-                    term_name=row['용어명'],
-                    explanation=row['설명']
+                    term_name=str(row['용어']).strip(),
+                    explanation=str(row['설명']).strip()
                 )
             )
         

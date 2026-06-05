@@ -19,7 +19,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # 3. 환경변수 적용
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
-FINANCIAL_API_KEY = env('FINANCIAL_API_KEY')
+#FINANCIAL_API_KEY = env('FINANCIAL_API_KEY')
 
 ALLOWED_HOSTS = []
 
