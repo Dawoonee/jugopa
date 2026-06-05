@@ -57,3 +57,16 @@ class UserQuizHistory(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - 퀴즈 {self.quiz.id} ({'정답' if self.is_correct else '오답'})"
+    
+# 기존 모델들은 그대로 유지하고 아래 코드만 추가
+class UserTermReadHistory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='read_terms')
+    term = models.ForeignKey(Term, on_delete=models.CASCADE)
+    read_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'user_term_read_history'
+        unique_together = ('user', 'term') # 동일한 용어를 여러 번 읽어도 한 번만 기록
+
+    def __str__(self):
+        return f"{self.user.username} - {self.term.term_name} 읽음"
