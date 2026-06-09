@@ -1,6 +1,11 @@
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from .models import Term, DailyTerm, Quiz, UserQuizHistory
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+import random
+
+from .models import Term, DailyTerm, Quiz, UserQuizHistory, UserTermReadHistory
 from .serializers import (
     TermSerializer, DailyTermSerializer, 
     QuizSerializer, UserQuizHistorySerializer
@@ -11,13 +16,46 @@ class TermViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Term.objects.all()
     serializer_class = TermSerializer
 
+
 class DailyTermViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DailyTerm.objects.all().order_by('-date')
     serializer_class = DailyTermSerializer
 
+    @action(detail=False, methods=['get'])
+    def today(self, request):
+        """오늘 자 기준 등록된 오늘의 용어가 있으면 반환하고, 없으면 무작위로 하나 뽑아서 생성 후 반환"""
+        today_date = timezone.now().date()
+        daily_term = DailyTerm.objects.filter(date=today_date).first()
+
+        # 오늘 제공된 용어가 없다면 전체 용어 테이블에서 무작위 추출
+        if not daily_term:
+            terms = list(Term.objects.all())
+            if terms:
+                random_term = random.choice(terms)
+                daily_term = DailyTerm.objects.create(date=today_date, term=random_term)
+            else:
+                return Response({"detail": "DB에 용어 데이터가 존재하지 않습니다."}, status=404)
+
+        serializer = self.get_serializer(daily_term)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def read(self, request, pk=None):
+        """사용자가 오늘의 용어 페이지에 방문했을 때 열람 이력을 체크(ID 기록)하는 API"""
+        daily_term = self.get_object()
+        
+        # 중복 생성 없이 안전하게 가져오거나 생성(get_or_create)
+        UserTermReadHistory.objects.get_or_create(
+            user=request.user,
+            term=daily_term.term
+        )
+        return Response({"detail": "용어 열람 기록이 정상적으로 체크되었습니다."})
+
+
 class QuizViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
 
 # 퀴즈 풀이 이력은 로그인한 유저만 생성 및 자신의 이력 조회 가능
 class UserQuizHistoryViewSet(mixins.CreateModelMixin, 
@@ -32,3 +70,41 @@ class UserQuizHistoryViewSet(mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class ReviewQuizViewSet(viewsets.ViewSet):
+    """사용자가 열람 체크해 둔 용어의 설명을 문제로 내고 주관식 정답을 맞추는 복습 퀴즈 뷰셋"""
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['get'])
+    def questions(self, request):
+        """사용자가 읽었던 용어들의 설명만 모아서 랜덤으로 섞어 퀴즈 목록으로 반환"""
+        read_histories = UserTermReadHistory.objects.filter(user=request.user).select_related('term')
+        
+        questions = []
+        for history in read_histories:
+            questions.append({
+                "term_id": history.term.id,
+                "explanation": history.term.explanation
+            })
+        
+        # 문제 무작위 셔플
+        random.shuffle(questions)
+        return Response(questions)
+
+    @action(detail=False, methods=['post'])
+    def submit(self, request):
+        """사용자가 주관식으로 입력한 텍스트 정답 여부 채점"""
+        term_id = request.data.get('term_id')
+        user_answer = request.data.get('answer', '').strip() # 앞뒤 공백 제거
+
+        try:
+            term = Term.objects.get(id=term_id)
+            is_correct = (term.term_name == user_answer)
+            
+            return Response({
+                "is_correct": is_correct,
+                "correct_answer": term.term_name
+            })
+        except Term.DoesNotExist:
+            return Response({"detail": "존재하지 않는 용어 번호입니다."}, status=404)
