@@ -1,0 +1,12 @@
+# Jugopa 백엔드 의존성
+Django>=5.2,<5.3
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+django-environ
+
+# news 크롤러
+feedparser
+beautifulsoup4
+anthropic
+pydantic
