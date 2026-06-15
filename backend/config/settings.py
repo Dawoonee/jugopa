@@ -29,10 +29,11 @@ INSTALLED_APPS = [
     'accounts',
     'stocks',
     'tutors',
-    'community',    
+    'community',
+    'news',
 
     # 3rd Party Apps (DRF 등 외부 라이브러리)
-    'rest_framework', 
+    'rest_framework',
 
     # Django Default Apps
     'django.contrib.admin',
