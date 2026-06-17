@@ -45,13 +45,6 @@ class DailyMarketWeather(models.Model):
 
 class TrendKeyword(models.Model):
     target_date = models.DateField(db_index=True)
-    weather_status = models.CharField(max_length=50)
-    message = models.TextField()
-    indicator_data = models.JSONField(default=dict)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-class TrendKeyword(models.Model):
-    target_date = models.DateField(db_index=True)
     keyword_name = models.CharField(max_length=100)
     tf_idf_score = models.FloatField()
 
