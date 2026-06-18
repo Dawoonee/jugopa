@@ -43,12 +43,23 @@ class DailyMarketWeather(models.Model):
     indicator_data = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
 
-class TrendKeyword(models.Model):
-    target_date = models.DateField(db_index=True)
-    weather_status = models.CharField(max_length=50)
-    message = models.TextField()
-    indicator_data = models.JSONField(default=dict)
-    created_at = models.DateTimeField(auto_now_add=True)
+class MarketIndexDaily(models.Model):
+    """코스피·코스닥 등 시장 지수의 일별 종가/등락. 개별 종목 시세(StockPriceDaily)와 별개 데이터."""
+    index_name = models.CharField(max_length=20, db_index=True)  # 코스피, 코스닥
+    base_date = models.DateField(db_index=True)
+    close_price = models.FloatField()       # clpr (종가 지수)
+    change = models.FloatField()            # vs (전일 대비)
+    change_rate = models.FloatField()       # fltRt (등락률 %)
+
+    class Meta:
+        ordering = ['-base_date']
+        constraints = [
+            models.UniqueConstraint(fields=['index_name', 'base_date'], name='uniq_index_date')
+        ]
+
+    def __str__(self):
+        return f"{self.base_date} {self.index_name} {self.close_price} ({self.change_rate:+.2f}%)"
+
 
 class TrendKeyword(models.Model):
     target_date = models.DateField(db_index=True)

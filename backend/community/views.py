@@ -1,6 +1,8 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import CommunityPost, CommunityComment
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.response import Response
+from .models import CommunityPost, CommunityComment, CommunityPostLike
 from .serializers import CommunityPostSerializer, CommunityCommentSerializer
 
 class CommunityPostViewSet(viewsets.ModelViewSet):
@@ -8,9 +10,29 @@ class CommunityPostViewSet(viewsets.ModelViewSet):
     serializer_class = CommunityPostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    # 종목별 커뮤니티: ?stock=<종목코드>로 해당 종목 글만 필터링
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        stock_code = self.request.query_params.get('stock')
+        if stock_code is not None:
+            queryset = queryset.filter(stock__stock_code=stock_code)
+        return queryset
+
     # 게시글 생성 시 현재 요청을 보낸 유저를 작성자로 자동 지정
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def like(self, request, pk=None):
+        """좋아요 토글 — 이미 눌렀으면 취소, 아니면 추가. {liked, like_count} 반환."""
+        post = self.get_object()
+        like, created = CommunityPostLike.objects.get_or_create(post=post, user=request.user)
+        if not created:
+            like.delete()
+        return Response({
+            'liked': created,
+            'like_count': post.likes.count(),
+        }, status=status.HTTP_200_OK)
 
 
 class CommunityCommentViewSet(viewsets.ModelViewSet):

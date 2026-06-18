@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from .models import UserDailyVisit
 from .serializers import RegisterSerializer, UserSerializer
 
 User = get_user_model()
@@ -33,6 +35,25 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     # URL에서 pk를 받지 않고, 현재 토큰으로 인증된 유저 객체를 바로 반환
     def get_object(self):
         return self.request.user
+
+
+class ProfileStatsView(APIView):
+    """마이페이지 통계 [F003] — 관심종목 수 / 퀴즈 참여 횟수 / 오늘 방문 여부.
+
+    호출 시 오늘 방문 기록(UserDailyVisit)을 남긴다.
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        today = timezone.localdate()
+        _, created = UserDailyVisit.objects.get_or_create(user=user, date=today)
+        return Response({
+            'bookmark_count': user.bookmarks.count(),
+            'quiz_count': user.quiz_histories.count(),
+            'today_visited': True,            # 이 요청으로 오늘 방문이 보장됨
+            'first_visit_today': created,     # 오늘 첫 방문이면 True
+        })
 
 
 class GenerateRandomPasswordView(APIView):

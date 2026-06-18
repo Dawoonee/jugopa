@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
@@ -55,6 +55,30 @@ class DailyTermViewSet(viewsets.ReadOnlyModelViewSet):
 class QuizViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+    @action(detail=True, methods=['post'], permission_classes=[AllowAny])
+    def check(self, request, pk=None):
+        """사용자가 고른 보기를 서버에서 채점하고 정답·해설을 반환한다.
+
+        익명 사용자도 채점 가능하며, 로그인 사용자는 풀이 이력이 기록된다.
+        """
+        quiz = self.get_object()
+        user_answer = request.data.get('answer', '')
+        is_correct = (user_answer == quiz.answer)
+
+        # 로그인 사용자는 풀이 이력을 기록한다.
+        if request.user.is_authenticated:
+            UserQuizHistory.objects.create(
+                user=request.user,
+                quiz=quiz,
+                is_correct=is_correct,
+            )
+
+        return Response({
+            "is_correct": is_correct,
+            "answer": quiz.answer,
+            "explanation": quiz.explanation,
+        })
 
 
 # 퀴즈 풀이 이력은 로그인한 유저만 생성 및 자신의 이력 조회 가능

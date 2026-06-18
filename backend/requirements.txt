@@ -10,3 +10,10 @@ feedparser
 beautifulsoup4
 anthropic
 pydantic
+
+# tutors 용어 엑셀 적재
+pandas
+openpyxl
+
+# stocks 시세 API 호출
+requests

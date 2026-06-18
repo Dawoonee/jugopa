@@ -15,6 +15,22 @@ class Sector(models.Model):
         return self.name
 
 
+class SectorStock(models.Model):
+    """섹터(업종) ↔ 대표 종목 매핑. 추천 섹터 카드의 TOP 종목 게이지에 사용된다."""
+    sector = models.ForeignKey(Sector, on_delete=models.CASCADE, related_name='sector_stocks')
+    stock = models.ForeignKey('stocks.Stock', on_delete=models.CASCADE, related_name='sector_links')
+    rank = models.IntegerField(default=0)  # 섹터 내 순위 (0이 최상위)
+
+    class Meta:
+        ordering = ['sector', 'rank']
+        constraints = [
+            models.UniqueConstraint(fields=['sector', 'stock'], name='uniq_sector_stock')
+        ]
+
+    def __str__(self):
+        return f"{self.sector.name} #{self.rank} {self.stock.stock_name}"
+
+
 class NewsArticle(models.Model):
     """RSS로 수집한 원문 기사."""
     title = models.CharField(max_length=500)

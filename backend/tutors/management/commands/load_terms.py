@@ -15,8 +15,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f"'{file_path}' 파일을 찾을 수 없습니다. manage.py와 동일한 폴더에 파일이 있는지 확인해 주세요."))
             return
 
-        # 2. Pandas OR 조건 문법 수정 (괄호와 비트 연산자 '|' 사용)
-        filtered_df = df[(df['주제'] == '금융') | (df['주제'] == '경제')]
+        # 2. '주제' 컬럼이 '금융'인 용어만 적재
+        filtered_df = df[df['주제'] == '금융']
 
         terms_to_create = []
         # .dropna(subset=['용어', '설명']) 등을 추가해 빈 값이 들어가는 것을 방지하면 더 안전합니다.
