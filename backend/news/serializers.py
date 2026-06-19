@@ -43,7 +43,7 @@ class SectorCardNewsSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = SectorCardNews
 		fields = [
-			'rank', 'sector_name', 'target_date', 'headline', 'summary',
+			'id', 'rank', 'sector_name', 'target_date', 'headline', 'summary',
 			'key_points', 'article_count', 'representative_articles', 'top_stocks',
 		]
 
