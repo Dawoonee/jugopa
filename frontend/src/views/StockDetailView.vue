@@ -35,6 +35,9 @@ const change = computed(() => (latest.value ? latest.value.close_price - latest.
 const changeRate = computed(() =>
   latest.value && latest.value.open_price ? (change.value / latest.value.open_price) * 100 : 0,
 )
+const naverNewsUrl = computed(
+  () => `https://finance.naver.com/item/news.naver?code=${stock.value?.stock_code ?? ''}`,
+)
 
 onMounted(async () => {
   const code = route.params.code
@@ -102,9 +105,14 @@ async function toggleBookmark() {
           <h1 class="stock-name">{{ stock.stock_name }}</h1>
           <span class="stock-code num">{{ stock.stock_code }} · {{ stock.market_type }}</span>
         </div>
-        <BaseButton :variant="bookmarked ? 'primary' : 'outline'" @click="toggleBookmark">
-          {{ bookmarked ? '♥ 관심' : '♡ 관심' }}
-        </BaseButton>
+        <div class="head-actions">
+          <a class="news-link" :href="naverNewsUrl" target="_blank" rel="noopener noreferrer">
+            📰 뉴스·공시
+          </a>
+          <BaseButton :variant="bookmarked ? 'primary' : 'outline'" @click="toggleBookmark">
+            {{ bookmarked ? '♥ 관심' : '♡ 관심' }}
+          </BaseButton>
+        </div>
       </header>
 
       <section v-if="latest" class="price-card card">
@@ -179,6 +187,25 @@ async function toggleBookmark() {
 .stock-code {
   font-size: 13px;
   color: var(--text-tertiary);
+}
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.news-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.news-link:hover {
+  color: var(--accent);
+  background: var(--bg-elevated);
 }
 .price-card {
   display: flex;
