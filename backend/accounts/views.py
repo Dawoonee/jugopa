@@ -1,13 +1,17 @@
 import string
 import secrets
+from datetime import timedelta
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
+from django.db.models import Count
+from django.db.models.functions import TruncDate
 from django.utils import timezone
 from .models import UserDailyVisit
 from .serializers import RegisterSerializer, UserSerializer
+from tutors.models import UserQuizHistory
 
 User = get_user_model()
 
@@ -53,6 +57,52 @@ class ProfileStatsView(APIView):
             'quiz_count': user.quiz_histories.count(),
             'today_visited': True,            # 이 요청으로 오늘 방문이 보장됨
             'first_visit_today': created,     # 오늘 첫 방문이면 True
+        })
+
+
+class QuizCalendarView(APIView):
+    """성취도(달력+메달)용 — 날짜별 퀴즈 풀이 집계와 연속 풀이 스트릭을 반환한다.
+
+    반환: { total_solved, current_streak, longest_streak, daily: [{date, count}] }
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        rows = (
+            UserQuizHistory.objects
+            .filter(user=user)
+            .annotate(day=TruncDate('solved_at'))
+            .values('day')
+            .annotate(count=Count('id'))
+            .order_by('day')
+        )
+        daily = [{'date': row['day'].isoformat(), 'count': row['count']} for row in rows]
+        total_solved = sum(row['count'] for row in rows)
+        date_set = {row['day'] for row in rows}
+
+        # 최장 연속 풀이일 계산
+        longest_streak = 0
+        run = 0
+        prev = None
+        for day in sorted(date_set):
+            run = run + 1 if (prev is not None and day == prev + timedelta(days=1)) else 1
+            longest_streak = max(longest_streak, run)
+            prev = day
+
+        # 현재 연속 풀이일 (오늘 또는 어제부터 거슬러 계산)
+        today = timezone.localdate()
+        cursor = today if today in date_set else today - timedelta(days=1)
+        current_streak = 0
+        while cursor in date_set:
+            current_streak += 1
+            cursor -= timedelta(days=1)
+
+        return Response({
+            'total_solved': total_solved,
+            'current_streak': current_streak,
+            'longest_streak': longest_streak,
+            'daily': daily,
         })
 
 
