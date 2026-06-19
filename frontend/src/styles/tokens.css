@@ -1,0 +1,69 @@
+/* 주고파 디자인 토큰 — 다크 토스 무드 (쿨 다크 + 토스 블루) */
+:root {
+  /* 배경 (쿨 다크 네이비) */
+  --bg-base: #0e1116;
+  --bg-surface: #161b22;
+  --bg-elevated: #1c2230;
+  --bg-hover: #222a38;
+
+  /* 시그니처 / 포인트 */
+  --accent: #3182f6;          /* 토스 블루 — CTA, 활성 탭, 강조 */
+  --accent-strong: #2570e8;
+  --accent-soft: rgba(49, 130, 246, 0.14);
+
+  /* 등락 (한국 관행: 빨강↑ / 파랑↓) */
+  --up: #f04452;              /* 상승 */
+  --up-soft: rgba(240, 68, 82, 0.14);
+  --down: #4593fc;           /* 하락 — primary와 구분되는 밝은 블루 */
+  --down-soft: rgba(69, 147, 252, 0.14);
+  --flat: #8b95a1;           /* 보합 */
+
+  /* 텍스트 */
+  --text-primary: #f5f7fa;
+  --text-secondary: #9aa5b1;
+  --text-tertiary: #6b7684;
+  --text-on-accent: #ffffff;
+
+  /* 보더 / 구분선 */
+  --border-subtle: rgba(245, 247, 250, 0.08);
+  --border-strong: rgba(245, 247, 250, 0.16);
+
+  /* 상태 */
+  --danger: #f04452;
+  --danger-soft: rgba(240, 68, 82, 0.14);
+  --success: #15c47e;
+
+  /* radius */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* elevation (다크: 미세 보더 + 약한 그림자) */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  /* typography */
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  /* layout */
+  --header-height: 64px;
+  --bottom-tab-height: 60px;
+  --content-max: 1080px;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 400ms;
+}

@@ -46,6 +46,7 @@ class CommunityComment(models.Model):
     )
     content = models.TextField(verbose_name="댓글 내용")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="작성일시")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="수정일시")
 
     class Meta:
         db_table = 'community_comment'
@@ -68,3 +69,17 @@ class CommunityPostLike(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ♥ {self.post_id}"
+
+
+class CommunityCommentLike(models.Model):
+    """댓글 좋아요 — 사용자당 댓글 1회."""
+    comment = models.ForeignKey(CommunityComment, on_delete=models.CASCADE, related_name='likes', verbose_name="댓글")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comment_likes', verbose_name="사용자")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'community_comment_like'
+        unique_together = ('comment', 'user')
+
+    def __str__(self):
+        return f"{self.user.username} ♥ comment {self.comment_id}"

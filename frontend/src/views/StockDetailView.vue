@@ -35,6 +35,9 @@ const change = computed(() => (latest.value ? latest.value.close_price - latest.
 const changeRate = computed(() =>
   latest.value && latest.value.open_price ? (change.value / latest.value.open_price) * 100 : 0,
 )
+const naverNewsUrl = computed(
+  () => `https://finance.naver.com/item/news.naver?code=${stock.value?.stock_code ?? ''}`,
+)
 
 onMounted(async () => {
   const code = route.params.code
@@ -102,9 +105,14 @@ async function toggleBookmark() {
           <h1 class="stock-name">{{ stock.stock_name }}</h1>
           <span class="stock-code num">{{ stock.stock_code }} · {{ stock.market_type }}</span>
         </div>
-        <BaseButton :variant="bookmarked ? 'primary' : 'outline'" @click="toggleBookmark">
-          {{ bookmarked ? '♥ 관심' : '♡ 관심' }}
-        </BaseButton>
+        <div class="head-actions">
+          <a class="news-link" :href="naverNewsUrl" target="_blank" rel="noopener noreferrer">
+            📰 뉴스·공시
+          </a>
+          <BaseButton :variant="bookmarked ? 'primary' : 'outline'" @click="toggleBookmark">
+            {{ bookmarked ? '♥ 관심' : '♡ 관심' }}
+          </BaseButton>
+        </div>
       </header>
 
       <section v-if="latest" class="price-card card">
@@ -139,9 +147,14 @@ async function toggleBookmark() {
         </div>
         <p v-if="!previewPosts.length" class="empty-line">아직 글이 없어요. 첫 글을 남겨보세요!</p>
         <ul v-else class="preview-list">
-          <li v-for="p in previewPosts" :key="p.id" class="preview-item">
-            <span class="preview-title">{{ p.title || p.content }}</span>
-            <span class="preview-meta num">♥ {{ p.like_count }} · 💬 {{ p.comment_count }}</span>
+          <li v-for="p in previewPosts" :key="p.id">
+            <RouterLink
+              :to="{ name: 'community-post-detail', params: { code: stock.stock_code, postId: p.id } }"
+              class="preview-item"
+            >
+              <span class="preview-title">{{ p.title || p.content }}</span>
+              <span class="preview-meta num">♥ {{ p.like_count }} · 💬 {{ p.comment_count }}</span>
+            </RouterLink>
           </li>
         </ul>
       </section>
@@ -174,6 +187,25 @@ async function toggleBookmark() {
 .stock-code {
   font-size: 13px;
   color: var(--text-tertiary);
+}
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.news-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur-fast), background var(--dur-fast);
+}
+.news-link:hover {
+  color: var(--accent);
+  background: var(--bg-elevated);
 }
 .price-card {
   display: flex;
@@ -247,6 +279,17 @@ async function toggleBookmark() {
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  padding: 8px 10px;
+  margin: 0 -10px;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  transition: background var(--dur-fast);
+}
+.preview-item:hover {
+  background: var(--bg-elevated);
+}
+.preview-item:hover .preview-title {
+  color: var(--accent);
 }
 .preview-title {
   overflow: hidden;
