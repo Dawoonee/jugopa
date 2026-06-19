@@ -139,9 +139,14 @@ async function toggleBookmark() {
         </div>
         <p v-if="!previewPosts.length" class="empty-line">아직 글이 없어요. 첫 글을 남겨보세요!</p>
         <ul v-else class="preview-list">
-          <li v-for="p in previewPosts" :key="p.id" class="preview-item">
-            <span class="preview-title">{{ p.title || p.content }}</span>
-            <span class="preview-meta num">♥ {{ p.like_count }} · 💬 {{ p.comment_count }}</span>
+          <li v-for="p in previewPosts" :key="p.id">
+            <RouterLink
+              :to="{ name: 'community-post-detail', params: { code: stock.stock_code, postId: p.id } }"
+              class="preview-item"
+            >
+              <span class="preview-title">{{ p.title || p.content }}</span>
+              <span class="preview-meta num">♥ {{ p.like_count }} · 💬 {{ p.comment_count }}</span>
+            </RouterLink>
           </li>
         </ul>
       </section>
@@ -247,6 +252,17 @@ async function toggleBookmark() {
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  padding: 8px 10px;
+  margin: 0 -10px;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  transition: background var(--dur-fast);
+}
+.preview-item:hover {
+  background: var(--bg-elevated);
+}
+.preview-item:hover .preview-title {
+  color: var(--accent);
 }
 .preview-title {
   overflow: hidden;
