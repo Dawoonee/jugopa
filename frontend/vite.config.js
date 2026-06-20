@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
+import { configDefaults } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
@@ -27,6 +28,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./vitest.setup.js']
+    setupFiles: ['./vitest.setup.js'],
+    // Playwright e2e 디렉터리는 vitest 대상에서 제외 (playwright로 별도 실행)
+    exclude: [...configDefaults.exclude, 'e2e/**'],
   },
 })

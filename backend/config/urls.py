@@ -16,13 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/stocks/', include('stocks.urls')),
     path('api/v1/news/', include('news.urls')),
     path('api/v1/community/', include('community.urls')),
-    
+
     path('api/v1/tutors/', include('tutors.urls')),
     path('api/v1/accounts/', include('accounts.urls')),
 ]
+
+# 개발 환경에서 업로드된 미디어 파일 서빙
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

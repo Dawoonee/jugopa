@@ -181,7 +181,7 @@ function formatDate(d) {
       <article class="card post">
         <header class="post-head">
           <div class="meta">
-            <span class="name">{{ post.username }}</span>
+            <span class="name">{{ post.nickname || post.username }}</span>
             <span class="date num">{{ formatDate(post.created_at) }}</span>
           </div>
           <div v-if="isPostOwner && !editingPost" class="owner-actions">
@@ -232,7 +232,7 @@ function formatDate(d) {
         <ul v-if="comments.length" class="comment-list">
           <li v-for="c in comments" :key="c.id" class="comment card">
             <div class="comment-head">
-              <span class="name">{{ c.username }}</span>
+              <span class="name">{{ c.nickname || c.username }}</span>
               <span class="date num">{{ formatDate(c.created_at) }}</span>
             </div>
 

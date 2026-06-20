@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
@@ -14,9 +14,15 @@ const toast = useToastStore()
 const router = useRouter()
 
 const form = ref({ username: '', password: '', email: '', nickname: '' })
+const passwordConfirm = ref('')
 const sectors = ref([])
 const selected = ref(new Set())
 const loading = ref(false)
+
+// 두 비밀번호가 모두 입력됐는데 서로 다를 때만 경고 표시
+const passwordMismatch = computed(
+  () => !!passwordConfirm.value && form.value.password !== passwordConfirm.value,
+)
 
 onMounted(async () => {
   try {
@@ -36,7 +42,9 @@ function toggleSector(id) {
 async function recommendPassword() {
   try {
     const { data } = await authApi.randomPassword()
+    // 추천 비밀번호는 직접 타이핑한 게 아니므로 확인 칸도 함께 채워준다
     form.value.password = data.recommended_password
+    passwordConfirm.value = data.recommended_password
     toast.show('안전한 비밀번호를 추천했어요', 'success')
   } catch (e) {
     toast.show('비밀번호 추천에 실패했어요', 'error')
@@ -44,6 +52,10 @@ async function recommendPassword() {
 }
 
 async function submit() {
+  if (form.value.password !== passwordConfirm.value) {
+    toast.show('비밀번호가 일치하지 않아요', 'error')
+    return
+  }
   loading.value = true
   try {
     await auth.signup({ ...form.value, interest_sectors: [...selected.value] })
@@ -74,6 +86,16 @@ async function submit() {
           <BaseButton variant="outline" type="button" @click="recommendPassword">추천</BaseButton>
         </div>
 
+        <div>
+          <BaseInput
+            v-model="passwordConfirm"
+            label="비밀번호 확인"
+            type="password"
+            placeholder="비밀번호를 한 번 더 입력하세요"
+          />
+          <p v-if="passwordMismatch" class="pw-error">비밀번호가 일치하지 않아요</p>
+        </div>
+
         <div class="sectors">
           <span class="sectors-label">관심 업종 (복수 선택)</span>
           <div class="sectors-grid">
@@ -89,7 +111,7 @@ async function submit() {
           </div>
         </div>
 
-        <BaseButton type="submit" block :disabled="loading">
+        <BaseButton type="submit" block :disabled="loading || passwordMismatch">
           {{ loading ? '가입 중…' : '가입하기' }}
         </BaseButton>
       </form>
@@ -135,6 +157,12 @@ async function submit() {
 }
 .pw-row :deep(.field) {
   flex: 1;
+}
+.pw-error {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
 }
 .sectors-label {
   display: block;

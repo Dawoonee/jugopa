@@ -11,17 +11,11 @@ const selected = ref(null)
 const result = ref(null) // { is_correct, answer, explanation }
 const submitting = ref(false)
 
-// "오늘의 1문제" — 목록에서 날짜 시드로 결정적 선택
-function pickDaily(list) {
-  if (!list.length) return null
-  const seed = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-  return list[Number(seed) % list.length]
-}
-
 onMounted(async () => {
   try {
-    const { data } = await tutorsApi.quizzes()
-    quiz.value = pickDaily(data)
+    // '오늘의 용어'와 동일한 주제의 퀴즈를 서버에서 받아온다
+    const { data } = await tutorsApi.todayQuiz()
+    quiz.value = data
   } catch (e) {
     quiz.value = null
   } finally {

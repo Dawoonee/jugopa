@@ -16,6 +16,13 @@ export const authApi = {
   updateProfile(payload) {
     return client.patch('accounts/profile/', payload)
   },
+  updateProfileImage(file) {
+    const fd = new FormData()
+    fd.append('profile_image', file)
+    return client.patch('accounts/profile/', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
   deleteProfile() {
     return client.delete('accounts/profile/')
   },
