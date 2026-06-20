@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 
 from news.models import Sector
 
@@ -54,4 +55,29 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         if interest_sectors:
             user.interest_sectors.set(interest_sectors)
+        return user
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    """
+    비밀번호 변경용 시리얼라이저 [F003]
+    현재 비밀번호 확인 후 새 비밀번호로 변경
+    """
+    current_password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    new_password = serializers.CharField(write_only=True, style={'input_type': 'password'})
+
+    def validate_current_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('현재 비밀번호가 일치하지 않습니다.')
+        return value
+
+    def validate_new_password(self, value):
+        validate_password(value, self.context['request'].user)
+        return value
+
+    def save(self, **kwargs):
+        user = self.context['request'].user
+        user.set_password(self.validated_data['new_password'])
+        user.save()
         return user

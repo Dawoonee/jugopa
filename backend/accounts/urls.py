@@ -18,6 +18,7 @@ urlpatterns = [
     
     # 마이페이지 (조회, 수정, 회원탈퇴가 모두 이 하나의 URL에서 HTTP 메서드(GET, PUT, DELETE)로 처리됨)
     path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/password/', views.PasswordChangeView.as_view(), name='change_password'),
     path('profile/stats/', views.ProfileStatsView.as_view(), name='profile_stats'),
     path('profile/quiz-calendar/', views.QuizCalendarView.as_view(), name='quiz_calendar'),
 ]

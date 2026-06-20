@@ -90,6 +90,39 @@ class TestAccountsAPI:
         response = api_client.get(url)
         assert response.data['first_visit_today'] is False
 
+    def test_change_password_success(self, api_client, test_user):
+        api_client.force_authenticate(user=test_user)
+        url = reverse('accounts:change_password')
+        data = {
+            "current_password": "testpassword123",
+            "new_password": "brandNewPassword456",
+        }
+        response = api_client.post(url, data)
+        assert response.status_code == status.HTTP_200_OK
+        test_user.refresh_from_db()
+        assert test_user.check_password("brandNewPassword456")
+
+    def test_change_password_wrong_current(self, api_client, test_user):
+        api_client.force_authenticate(user=test_user)
+        url = reverse('accounts:change_password')
+        data = {
+            "current_password": "wrongpassword",
+            "new_password": "brandNewPassword456",
+        }
+        response = api_client.post(url, data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        test_user.refresh_from_db()
+        assert test_user.check_password("testpassword123")
+
+    def test_change_password_unauthenticated(self, api_client):
+        url = reverse('accounts:change_password')
+        data = {
+            "current_password": "testpassword123",
+            "new_password": "brandNewPassword456",
+        }
+        response = api_client.post(url, data)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
     def test_quiz_calendar(self, api_client, test_user):
         api_client.force_authenticate(user=test_user)
         url = reverse('accounts:quiz_calendar')
