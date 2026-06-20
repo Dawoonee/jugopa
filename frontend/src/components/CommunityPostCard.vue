@@ -59,12 +59,12 @@ async function toggleLike() {
       <header class="post-head">
         <BaseAvatar
           :src="post.profile_image"
-          :text="(post.username || '?').charAt(0).toUpperCase()"
+          :text="(post.nickname || post.username || '?').charAt(0).toUpperCase()"
           :size="36"
           :bg="avatarColor(post.username)"
         />
         <div class="meta">
-          <span class="name">{{ post.username }}</span>
+          <span class="name">{{ post.nickname || post.username }}</span>
           <span class="date">{{ new Date(post.created_at).toLocaleDateString('ko-KR') }}</span>
         </div>
       </header>
