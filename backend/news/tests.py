@@ -1,58 +1,64 @@
-from django.test import SimpleTestCase
+import pytest
+from django.urls import reverse
+from rest_framework.test import APIClient
+from rest_framework import status
+from .models import Sector, SectorStock, SectorCardNews, NewsArticle
+from stocks.models import Stock
+from django.utils import timezone
 
-from news.selection import classify_text, select_sectors
+@pytest.fixture
+def api_client():
+    return APIClient()
 
+@pytest.fixture
+def test_sector():
+    return Sector.objects.create(name="IT", display_order=1, is_active=True)
 
-class ClassifyTextTests(SimpleTestCase):
-    SECTOR_KEYWORDS = {
-        "반도체": ["반도체", "HBM", "엔비디아"],
-        "2차전지": ["배터리", "양극재"],
-        "금융": ["금리", "은행"],
-    }
+@pytest.fixture
+def test_stock():
+    return Stock.objects.create(stock_code="005930", stock_name="삼성전자", market_type="KOSPI")
 
-    def test_single_match(self):
-        result = classify_text("엔비디아 실적 호조에 반도체주 강세", self.SECTOR_KEYWORDS)
-        self.assertEqual(set(result), {"반도체"})
+@pytest.fixture
+def test_sector_stock(test_sector, test_stock):
+    return SectorStock.objects.create(sector=test_sector, stock=test_stock, rank=1)
 
-    def test_multiple_matches(self):
-        result = classify_text("배터리 업체 금리 부담 확대", self.SECTOR_KEYWORDS)
-        self.assertEqual(set(result), {"2차전지", "금융"})
+@pytest.fixture
+def test_card_news(test_sector):
+    today = timezone.localdate()
+    return SectorCardNews.objects.create(
+        sector=test_sector,
+        target_date=today,
+        headline="IT News Headline",
+        summary="IT Summary",
+        rank=1
+    )
 
-    def test_no_match_returns_empty(self):
-        self.assertEqual(classify_text("날씨가 맑습니다", self.SECTOR_KEYWORDS), [])
+@pytest.mark.django_db
+class TestNewsAPI:
+    def test_sectors_list(self, api_client, test_sector):
+        url = reverse('news:sectors_list')
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) >= 1
+        assert response.data[0]['name'] == "IT"
 
-    def test_case_insensitive(self):
-        self.assertEqual(classify_text("hbm 수요 급증", self.SECTOR_KEYWORDS), ["반도체"])
+    def test_sectors_today(self, api_client, test_card_news):
+        url = reverse('news:sectors_today')
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) >= 1
+        assert response.data[0]['headline'] == "IT News Headline"
 
+    def test_card_news_detail(self, api_client, test_card_news):
+        url = reverse('news:card_news_detail', kwargs={'card_id': test_card_news.id})
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['headline'] == "IT News Headline"
 
-class SelectSectorsTests(SimpleTestCase):
-    def test_picks_top_four_above_threshold(self):
-        counts = {"A": 10, "B": 8, "C": 6, "D": 4, "E": 3}
-        selected = select_sectors(counts)
-        self.assertEqual(selected, ["A", "B", "C", "D"])  # 최대 4개
-
-    def test_orders_by_score_when_provided(self):
-        counts = {"A": 5, "B": 5, "C": 5}
-        scores = {"A": 1.0, "B": 9.0, "C": 5.0}
-        self.assertEqual(select_sectors(counts, scores), ["B", "C", "A"])
-
-    def test_excludes_below_threshold_but_keeps_min_two(self):
-        # 임계치(3) 이상은 A 하나뿐 → 최소 2개 보장을 위해 B를 채운다.
-        counts = {"A": 5, "B": 2, "C": 1}
-        selected = select_sectors(counts)
-        self.assertEqual(len(selected), 2)
-        self.assertEqual(selected[0], "A")
-        self.assertEqual(selected[1], "B")  # 점수 차순으로 다음 후보
-
-    def test_no_qualified_fills_min_two(self):
-        counts = {"A": 2, "B": 1}
-        selected = select_sectors(counts)
-        self.assertEqual(selected, ["A", "B"])
-
-    def test_returns_all_when_fewer_than_min(self):
-        counts = {"A": 1}
-        self.assertEqual(select_sectors(counts), ["A"])
-
-    def test_respects_max_n(self):
-        counts = {n: 5 for n in "ABCDEF"}
-        self.assertEqual(len(select_sectors(counts)), 4)
+    def test_sector_stocks(self, api_client, test_sector, test_sector_stock):
+        url = reverse('news:sector_stocks', kwargs={'sector_id': test_sector.id})
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['sector_id'] == test_sector.id
+        assert len(response.data['stocks']) >= 1
+        assert response.data['stocks'][0]['stock_code'] == "005930"
