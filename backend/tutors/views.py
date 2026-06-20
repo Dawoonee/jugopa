@@ -11,6 +11,22 @@ from .serializers import (
     QuizSerializer, UserQuizHistorySerializer
 )
 
+def get_or_create_today_term():
+    """오늘 자 DailyTerm을 반환하고, 없으면 전체 용어 중 무작위로 하나 골라 생성한다.
+
+    용어 데이터가 전혀 없으면 None을 반환한다.
+    '오늘의 용어'와 '오늘의 퀴즈'가 같은 용어를 가리키도록 양쪽에서 공통 사용한다.
+    """
+    today_date = timezone.now().date()
+    daily_term = DailyTerm.objects.filter(date=today_date).select_related('term').first()
+    if not daily_term:
+        terms = list(Term.objects.all())
+        if not terms:
+            return None
+        daily_term = DailyTerm.objects.create(date=today_date, term=random.choice(terms))
+    return daily_term
+
+
 # 일반 유저는 조회만 가능 (데이터 수정은 Django Admin에서 수행)
 class TermViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Term.objects.all()
@@ -24,17 +40,9 @@ class DailyTermViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['get'])
     def today(self, request):
         """오늘 자 기준 등록된 오늘의 용어가 있으면 반환하고, 없으면 무작위로 하나 뽑아서 생성 후 반환"""
-        today_date = timezone.now().date()
-        daily_term = DailyTerm.objects.filter(date=today_date).first()
-
-        # 오늘 제공된 용어가 없다면 전체 용어 테이블에서 무작위 추출
+        daily_term = get_or_create_today_term()
         if not daily_term:
-            terms = list(Term.objects.all())
-            if terms:
-                random_term = random.choice(terms)
-                daily_term = DailyTerm.objects.create(date=today_date, term=random_term)
-            else:
-                return Response({"detail": "DB에 용어 데이터가 존재하지 않습니다."}, status=404)
+            return Response({"detail": "DB에 용어 데이터가 존재하지 않습니다."}, status=404)
 
         serializer = self.get_serializer(daily_term)
         return Response(serializer.data)
@@ -55,6 +63,25 @@ class DailyTermViewSet(viewsets.ReadOnlyModelViewSet):
 class QuizViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+    @action(detail=False, methods=['get'])
+    def today(self, request):
+        """'오늘의 용어'에 해당하는 퀴즈를 반환한다.
+
+        퀴즈 문제는 '… — {용어명}' 형식으로 끝나므로, 오늘의 용어명으로 끝나는 퀴즈를 찾아
+        오늘의 용어와 오늘의 퀴즈 주제를 일치시킨다.
+        """
+        daily_term = get_or_create_today_term()
+        if not daily_term:
+            return Response({"detail": "DB에 용어 데이터가 존재하지 않습니다."}, status=404)
+
+        term_name = daily_term.term.term_name
+        quiz = Quiz.objects.filter(question__endswith=term_name).first()
+        if not quiz:
+            return Response({"detail": "오늘의 용어에 해당하는 퀴즈가 없습니다."}, status=404)
+
+        serializer = self.get_serializer(quiz)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'], permission_classes=[AllowAny])
     def check(self, request, pk=None):

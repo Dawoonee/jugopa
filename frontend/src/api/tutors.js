@@ -7,6 +7,9 @@ export const tutorsApi = {
   quizzes() {
     return client.get('tutors/quizzes/')
   },
+  todayQuiz() {
+    return client.get('tutors/quizzes/today/')
+  },
   checkQuiz(quizId, answer) {
     return client.post(`tutors/quizzes/${quizId}/check/`, { answer })
   },
