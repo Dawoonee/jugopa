@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { communityApi } from '@/api/community'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
+import BaseAvatar from '@/components/common/BaseAvatar.vue'
 
 const props = defineProps({
   post: { type: Object, required: true },
@@ -56,9 +57,12 @@ async function toggleLike() {
   <article class="post card">
     <div class="post-click" @click="goDetail">
       <header class="post-head">
-        <span class="avatar" :style="{ background: avatarColor(post.username) }">
-          {{ (post.username || '?').charAt(0).toUpperCase() }}
-        </span>
+        <BaseAvatar
+          :src="post.profile_image"
+          :text="(post.username || '?').charAt(0).toUpperCase()"
+          :size="36"
+          :bg="avatarColor(post.username)"
+        />
         <div class="meta">
           <span class="name">{{ post.username }}</span>
           <span class="date">{{ new Date(post.created_at).toLocaleDateString('ko-KR') }}</span>
@@ -85,15 +89,6 @@ async function toggleLike() {
   align-items: center;
   gap: 10px;
   margin-bottom: var(--space-3);
-}
-.avatar {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-pill);
-  color: #fff;
-  font-weight: 700;
 }
 .meta {
   display: flex;

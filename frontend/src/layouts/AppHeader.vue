@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
+import BaseAvatar from '@/components/common/BaseAvatar.vue'
 
 const auth = useAuthStore()
 const toast = useToastStore()
@@ -51,8 +52,20 @@ function onLogout() {
       </nav>
 
       <div class="user-area">
-        <button class="avatar" type="button" :aria-label="auth.isAuthenticated ? '마이페이지' : '로그인'" @click="goAuth">
-          {{ auth.isAuthenticated ? initial : '로그인' }}
+        <button
+          class="avatar"
+          :class="{ 'avatar--user': auth.isAuthenticated }"
+          type="button"
+          :aria-label="auth.isAuthenticated ? '마이페이지' : '로그인'"
+          @click="goAuth"
+        >
+          <BaseAvatar
+            v-if="auth.isAuthenticated"
+            :src="auth.user?.profile_image"
+            :text="initial"
+            :size="38"
+          />
+          <template v-else>로그인</template>
         </button>
         <button v-if="auth.isAuthenticated" class="logout" type="button" @click="onLogout">로그아웃</button>
       </div>
@@ -134,6 +147,16 @@ function onLogout() {
 }
 .avatar:hover {
   border-color: var(--accent);
+}
+.avatar--user {
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-pill);
+}
+.avatar--user:hover {
+  box-shadow: 0 0 0 2px var(--accent);
 }
 .logout {
   height: 38px;

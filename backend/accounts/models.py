@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     nickname = models.CharField(max_length=50, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    profile_image = models.ImageField(upload_to='profiles/', null=True, blank=True)
     interest_sectors = models.ManyToManyField(
         'news.Sector', blank=True, related_name='interested_users', verbose_name="관심 업종"
     )

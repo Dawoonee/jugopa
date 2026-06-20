@@ -8,6 +8,7 @@ import { useToastStore } from '@/stores/toast'
 import ProfileEditModal from '@/components/ProfileEditModal.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
+import BaseAvatar from '@/components/common/BaseAvatar.vue'
 import TagChip from '@/components/common/TagChip.vue'
 import AchievementCalendar from '@/components/AchievementCalendar.vue'
 import MedalShelf from '@/components/MedalShelf.vue'
@@ -72,7 +73,7 @@ function onUpdated() {
   <div class="page mypage">
     <!-- 프로필 카드 -->
     <section class="profile card">
-      <span class="avatar">{{ initial }}</span>
+      <BaseAvatar :src="user?.profile_image" :text="initial" :size="64" />
       <div class="p-info">
         <h1 class="p-name">{{ user?.nickname }}</h1>
         <p class="p-email">{{ user?.email || '이메일 미등록' }}</p>
@@ -177,17 +178,6 @@ function onUpdated() {
   align-items: center;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
-}
-.avatar {
-  width: 64px;
-  height: 64px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, var(--accent), #5aa0ff);
-  color: #fff;
-  font-size: 26px;
-  font-weight: 800;
 }
 .p-info {
   flex: 1;

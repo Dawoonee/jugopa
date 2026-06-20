@@ -22,6 +22,8 @@ class CommunityCommentSerializer(serializers.ModelSerializer):
 
 class CommunityPostSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    # 작성자 프로필 이미지(읽기 전용)
+    profile_image = serializers.ImageField(source='user.profile_image', read_only=True)
     # 게시글 조회 시 달린 댓글들도 함께 보여주기 위해 중첩 시리얼라이저 사용
     comments = CommunityCommentSerializer(many=True, read_only=True)
     comment_count = serializers.IntegerField(source='comments.count', read_only=True)
@@ -33,7 +35,7 @@ class CommunityPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CommunityPost
-        fields = ['id', 'user', 'username', 'stock', 'stock_code', 'stock_name',
+        fields = ['id', 'user', 'username', 'profile_image', 'stock', 'stock_code', 'stock_name',
                   'title', 'content', 'created_at', 'updated_at',
                   'comments', 'comment_count', 'like_count', 'liked']
         read_only_fields = ['user']
