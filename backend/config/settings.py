@@ -21,6 +21,11 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 FINANCIAL_API_KEY = env('FINANCIAL_API_KEY')
 
+# GMS (챗봇용 LLM, OpenAI 호환 API)
+GMS_API_KEY = env('GMS_API_KEY', default='')
+GMS_BASE_URL = env('GMS_BASE_URL', default='')
+GMS_MODEL = env('GMS_MODEL', default='gpt-5-nano')
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -31,6 +36,7 @@ INSTALLED_APPS = [
     'tutors',
     'community',
     'news',
+    'chatbot',
 
     # 3rd Party Apps (DRF 등 외부 라이브러리)
     'rest_framework',

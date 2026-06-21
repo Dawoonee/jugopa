@@ -1,8 +1,9 @@
 import client from './client'
 
 export const newsApi = {
-  sectors() {
-    return client.get('news/sectors/')
+  // 관심 업종 선택용 — 기본은 대분류(LARGE) 10개
+  sectors(level = 'LARGE') {
+    return client.get('news/sectors/', { params: { level } })
   },
   sectorsToday() {
     return client.get('news/sectors/today/')

@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import ToastHost from '@/components/common/ToastHost.vue'
-import MascotWidget from '@/components/MascotWidget.vue'
+import ChatbotWidget from '@/components/ChatbotWidget.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
@@ -22,7 +22,7 @@ onMounted(() => {
     </router-view>
   </DefaultLayout>
   <ToastHost />
-  <MascotWidget />
+  <ChatbotWidget />
 </template>
 
 <style>

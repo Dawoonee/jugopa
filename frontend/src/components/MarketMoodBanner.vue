@@ -8,7 +8,7 @@ const moodMap = {
   SUNNY: { title: '오늘은 맑음 🌤️', tone: 'sunny' },
   CLOUDY: { title: '흐림 ☁️', tone: 'cloudy' },
   RAINY: { title: '비 🌧️', tone: 'rainy' },
-  STORMY: { title: '돌풍 ⛈️', tone: 'stormy' },
+  STORMY: { title: '비+천둥 ⛈️', tone: 'stormy' },
 }
 function mood(status) {
   return moodMap[status] || { title: '시장 분석 중 ☁️', tone: 'cloudy' }

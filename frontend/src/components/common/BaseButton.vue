@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  variant: { type: String, default: 'primary' }, // primary | outline | destructive | ghost
+  variant: { type: String, default: 'primary' }, // primary | secondary | outline | destructive | ghost
   type: { type: String, default: 'button' },
   disabled: { type: Boolean, default: false },
   block: { type: Boolean, default: false },
@@ -51,6 +51,14 @@ defineProps({
 }
 .btn--primary:hover:not(:disabled) {
   background: var(--accent-strong);
+}
+.btn--secondary {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+.btn--secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
 }
 .btn--outline {
   background: transparent;

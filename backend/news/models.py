@@ -2,17 +2,34 @@ from django.db import models
 
 
 class Sector(models.Model):
-    """고정 섹터 분류표. keywords 부분일치로 기사를 섹터에 매칭한다."""
-    name = models.CharField(max_length=100, unique=True)
-    keywords = models.JSONField(default=list)  # list[str]
+    """WICS 기반 섹터 분류표(자기참조 계층).
+
+    - level=LARGE: 대분류 10개(관심 섹터 선택 단위, parent=None)
+    - level=MID: 중분류 28개(기사/카드뉴스 분류 단위, parent=대분류)
+    keywords(중분류에만 부여)를 기사 제목+요약에 부분일치시켜 섹터를 매칭한다.
+    """
+
+    class Level(models.TextChoices):
+        LARGE = 'LARGE', '대분류'
+        MID = 'MID', '중분류'
+
+    name = models.CharField(max_length=100)
+    level = models.CharField(max_length=10, choices=Level.choices, default=Level.MID)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE, related_name='children'
+    )
+    keywords = models.JSONField(default=list)  # list[str] (중분류에서만 사용)
     display_order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['display_order', 'name']
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'level'], name='uniq_sector_name_level')
+        ]
 
     def __str__(self):
-        return self.name
+        return f"[{self.level}] {self.name}"
 
 
 class SectorStock(models.Model):

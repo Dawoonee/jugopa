@@ -111,7 +111,7 @@ function optionState(opt) {
       >
         {{ submitting ? '채점 중…' : '제출하기' }}
       </BaseButton>
-      <BaseButton v-else variant="outline" block class="submit" @click="$router.push({ name: 'knowledge' })">
+      <BaseButton v-else variant="secondary" block class="submit" @click="$router.push({ name: 'knowledge' })">
         뒤로가기
       </BaseButton>
     </template>

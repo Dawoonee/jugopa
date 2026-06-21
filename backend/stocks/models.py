@@ -31,7 +31,7 @@ class DailyMarketWeather(models.Model):
         SUNNY = 'SUNNY', '맑음'
         CLOUDY = 'CLOUDY', '흐림'
         RAINY = 'RAINY', '비'
-        STORMY = 'STORMY', '돌풍'
+        STORMY = 'STORMY', '비+천둥'
     
     target_date = models.DateField(unique=True, db_index=True)
     weather_status = models.CharField(

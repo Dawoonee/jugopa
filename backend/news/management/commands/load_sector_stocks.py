@@ -18,9 +18,9 @@ class Command(BaseCommand):
 		created = 0
 		failed = 0
 		for sector_name, stock_names in SECTOR_STOCKS.items():
-			sector = Sector.objects.filter(name=sector_name).first()
+			sector = Sector.objects.filter(name=sector_name, level=Sector.Level.MID).first()
 			if not sector:
-				self.stdout.write(self.style.WARNING(f"섹터 없음: {sector_name} (load_sectors 먼저 실행)"))
+				self.stdout.write(self.style.WARNING(f"중분류 없음: {sector_name} (load_sectors 먼저 실행)"))
 				continue
 
 			for rank, stock_name in enumerate(stock_names):

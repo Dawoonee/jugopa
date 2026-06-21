@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     # 읽기: 관심 업종명 리스트 / 쓰기: 섹터 id 리스트
     interest_sectors = serializers.PrimaryKeyRelatedField(
-        queryset=Sector.objects.all(), many=True, required=False
+        queryset=Sector.objects.filter(level=Sector.Level.LARGE), many=True, required=False
     )
     interest_sector_names = serializers.SerializerMethodField()
     # 업로드(파일) + 삭제(null) 모두 허용
@@ -37,7 +37,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     # password는 쓰기 전용으로 설정하여 GET 요청 시 노출되지 않도록 함
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
     interest_sectors = serializers.PrimaryKeyRelatedField(
-        queryset=Sector.objects.all(), many=True, required=False
+        queryset=Sector.objects.filter(level=Sector.Level.LARGE), many=True, required=False
     )
 
     class Meta:
