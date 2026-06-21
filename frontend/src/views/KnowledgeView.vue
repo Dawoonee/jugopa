@@ -8,6 +8,7 @@ import bgQuiz from '@/assets/backgrounds/quiz.png'
 
 const term = ref(null)
 const loading = ref(true)
+const solvedToday = ref(false)
 
 onMounted(async () => {
   try {
@@ -17,6 +18,13 @@ onMounted(async () => {
     term.value = null
   } finally {
     loading.value = false
+  }
+  // 오늘 퀴즈를 이미 풀었는지 확인해 버튼 라벨을 분기한다 (실패해도 무시)
+  try {
+    const { data } = await tutorsApi.todayQuiz()
+    solvedToday.value = !!data.solved_today
+  } catch (e) {
+    solvedToday.value = false
   }
 })
 </script>
@@ -43,7 +51,7 @@ onMounted(async () => {
     </article>
 
     <BaseButton v-if="term" block class="quiz-cta" @click="$router.push({ name: 'quiz' })">
-      퀴즈 풀러 가기 →
+      {{ solvedToday ? '오늘 푼 퀴즈 보기 →' : '퀴즈 풀러 가기 →' }}
     </BaseButton>
   </div>
 </template>

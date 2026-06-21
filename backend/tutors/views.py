@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -81,30 +81,61 @@ class QuizViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({"detail": "오늘의 용어에 해당하는 퀴즈가 없습니다."}, status=404)
 
         serializer = self.get_serializer(quiz)
-        return Response(serializer.data)
+        data = dict(serializer.data)
+
+        # 로그인 사용자라면 오늘 이미 풀었는지와 그 결과(복습용)를 함께 내려준다.
+        data['solved_today'] = False
+        data['result'] = None
+        if request.user.is_authenticated:
+            today = timezone.localdate()
+            history = UserQuizHistory.objects.filter(user=request.user, solved_date=today).first()
+            if history:
+                data['solved_today'] = True
+                data['result'] = {
+                    'user_choice': history.user_choice,
+                    'answer': quiz.answer,
+                    'is_correct': history.is_correct,
+                    'explanation': quiz.explanation,
+                }
+        return Response(data)
 
     @action(detail=True, methods=['post'], permission_classes=[AllowAny])
     def check(self, request, pk=None):
         """사용자가 고른 보기를 서버에서 채점하고 정답·해설을 반환한다.
 
-        익명 사용자도 채점 가능하며, 로그인 사용자는 풀이 이력이 기록된다.
+        익명 사용자도 채점 가능하며, 로그인 사용자는 하루 1건만 풀이 이력이 기록된다.
+        이미 오늘 푼 경우 409와 함께 기존 결과를 반환한다.
         """
         quiz = self.get_object()
         user_answer = request.data.get('answer', '')
         is_correct = (user_answer == quiz.answer)
 
-        # 로그인 사용자는 풀이 이력을 기록한다.
+        # 로그인 사용자는 하루 1건만 기록한다.
         if request.user.is_authenticated:
+            today = timezone.localdate()
+            existing = UserQuizHistory.objects.filter(user=request.user, solved_date=today).first()
+            if existing:
+                return Response({
+                    "detail": "오늘은 이미 퀴즈를 풀었습니다.",
+                    "is_correct": existing.is_correct,
+                    "answer": quiz.answer,
+                    "explanation": quiz.explanation,
+                    "user_choice": existing.user_choice,
+                }, status=status.HTTP_409_CONFLICT)
+
             UserQuizHistory.objects.create(
                 user=request.user,
                 quiz=quiz,
                 is_correct=is_correct,
+                user_choice=user_answer,
+                solved_date=today,
             )
 
         return Response({
             "is_correct": is_correct,
             "answer": quiz.answer,
             "explanation": quiz.explanation,
+            "user_choice": user_answer,
         })
 
 
