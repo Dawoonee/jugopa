@@ -6,12 +6,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
-from django.db.models import Count
-from django.db.models.functions import TruncDate
 from django.utils import timezone
 from .models import UserDailyVisit
 from .serializers import RegisterSerializer, UserSerializer, PasswordChangeSerializer
-from tutors.models import UserQuizHistory
+from tutors.models import UserQuizHistory, DailyTerm
 
 User = get_user_model()
 
@@ -83,17 +81,38 @@ class QuizCalendarView(APIView):
 
     def get(self, request):
         user = request.user
-        rows = (
+        # 하루 1건 제약이 있으므로 풀이 이력 = 날짜별 1건. 용어/퀴즈 상세까지 함께 내려준다.
+        histories = (
             UserQuizHistory.objects
             .filter(user=user)
-            .annotate(day=TruncDate('solved_at'))
-            .values('day')
-            .annotate(count=Count('id'))
-            .order_by('day')
+            .select_related('quiz')
+            .order_by('solved_date')
         )
-        daily = [{'date': row['day'].isoformat(), 'count': row['count']} for row in rows]
-        total_solved = sum(row['count'] for row in rows)
-        date_set = {row['day'] for row in rows}
+
+        # 풀이한 날짜의 '오늘의 용어'를 한 번에 매핑 (date → DailyTerm.term)
+        solved_dates = [h.solved_date for h in histories]
+        term_by_date = {
+            dt.date: dt.term
+            for dt in DailyTerm.objects.filter(date__in=solved_dates).select_related('term')
+        }
+
+        daily = []
+        for h in histories:
+            term = term_by_date.get(h.solved_date)
+            daily.append({
+                'date': h.solved_date.isoformat(),
+                'count': 1,
+                'term_name': term.term_name if term else '',
+                'term_explanation': term.explanation if term else '',
+                'is_correct': h.is_correct,
+                'user_choice': h.user_choice,
+                'answer': h.quiz.answer,
+                'question': h.quiz.question,
+                'options': h.quiz.options,
+                'explanation': h.quiz.explanation,
+            })
+        total_solved = len(daily)
+        date_set = {h.solved_date for h in histories}
 
         # 최장 연속 풀이일 계산
         longest_streak = 0
