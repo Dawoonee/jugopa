@@ -15,11 +15,11 @@ class DailyMarketWeatherSerializer(serializers.ModelSerializer):
 
     def get_weather_emoji(self, obj):
         emoji_map = {
-            'SUNNY': '☀️',
+            'VERY_SUNNY': '☀️',
+            'SUNNY': '⛅',
             'CLOUDY': '☁️',
             'RAINY': '🌧️',
-            'SNOWY': '❄️',
-            'STORMY': '⚡',
+            'STORMY': '🌩️',
         }
         return emoji_map.get(obj.weather_status, '❓')
     

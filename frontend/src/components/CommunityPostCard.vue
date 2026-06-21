@@ -81,6 +81,13 @@ async function toggleLike() {
 </template>
 
 <style scoped>
+.post {
+  background: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-tertiary: rgba(0, 0, 0, 0.5);
+  color: var(--text-primary);
+}
 .post-click {
   cursor: pointer;
 }

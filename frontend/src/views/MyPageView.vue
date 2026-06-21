@@ -13,10 +13,13 @@ import TagChip from '@/components/common/TagChip.vue'
 import AchievementCalendar from '@/components/AchievementCalendar.vue'
 import MedalShelf from '@/components/MedalShelf.vue'
 import { useCountUp } from '@/composables/useCountUp'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const auth = useAuthStore()
 const toast = useToastStore()
 const router = useRouter()
+
+const { fetchWeather, themeClass, bgStyle } = useWeatherTheme()
 
 const stats = ref({ bookmark_count: 0, quiz_count: 0, today_visited: false })
 const bookmarks = ref([])
@@ -44,6 +47,7 @@ onMounted(async () => {
   } catch (e) {
     /* noop */
   }
+  await fetchWeather()
 })
 
 async function withdraw() {
@@ -70,7 +74,8 @@ function onUpdated() {
 </script>
 
 <template>
-  <div class="page mypage">
+  <div class="page mypage" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
     <!-- 프로필 카드 -->
     <section class="profile card">
       <BaseAvatar :src="user?.profile_image" :text="initial" :size="64" />

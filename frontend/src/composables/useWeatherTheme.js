@@ -8,8 +8,8 @@ import bgRainy from '@/assets/backgrounds/rainy.png'
 import bgStormy from '@/assets/backgrounds/stormy.png'
 
 const bgMap = {
-  VERY_SUNNY: bgClean,
-  SUNNY: bgSunny,
+  VERY_SUNNY: bgSunny,
+  SUNNY: bgClean,
   CLOUDY: bgCloudy,
   RAINY: bgRainy,
   STORMY: bgStormy,

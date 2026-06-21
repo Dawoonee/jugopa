@@ -31,7 +31,7 @@ defineProps({
   transition: background var(--dur-fast);
 }
 .row:hover {
-  background: var(--bg-hover);
+  background: rgba(128, 128, 128, 0.1);
 }
 .row-info {
   display: flex;
