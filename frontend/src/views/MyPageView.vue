@@ -275,6 +275,7 @@ function onUpdated() {
 }
 .ach-head .block-title {
   margin-bottom: 0;
+  font-size: 20px;
 }
 .ach-stats {
   display: flex;

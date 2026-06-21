@@ -17,6 +17,10 @@ onMounted(async () => {
     // '오늘의 용어'와 동일한 주제의 퀴즈를 서버에서 받아온다
     const { data } = await tutorsApi.todayQuiz()
     quiz.value = data
+    // 오늘 이미 풀었다면 복습(read-only) 모드로 전환한다
+    if (data.solved_today && data.result) {
+      applyResult(data.result)
+    }
   } catch (e) {
     quiz.value = null
   } finally {
@@ -24,12 +28,27 @@ onMounted(async () => {
   }
 })
 
+// 채점 결과를 화면 상태에 반영한다 (제출 직후/복습/중복제출 공통)
+function applyResult(data) {
+  selected.value = data.user_choice ?? selected.value
+  result.value = {
+    is_correct: data.is_correct,
+    answer: data.answer,
+    explanation: data.explanation,
+  }
+}
+
 async function submit() {
   if (selected.value === null || result.value) return
   submitting.value = true
   try {
     const { data } = await tutorsApi.checkQuiz(quiz.value.id, selected.value)
-    result.value = data
+    applyResult(data)
+  } catch (e) {
+    // 이미 오늘 푼 경우(409): 기존 결과로 복습 화면 전환
+    if (e?.response?.status === 409) {
+      applyResult(e.response.data)
+    }
   } finally {
     submitting.value = false
   }
