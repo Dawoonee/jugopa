@@ -23,6 +23,9 @@ export const authApi = {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
   },
+  changePassword(payload) {
+    return client.post('accounts/profile/password/', payload)
+  },
   deleteProfile() {
     return client.delete('accounts/profile/')
   },

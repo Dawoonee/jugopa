@@ -9,6 +9,7 @@ import BaseInput from '@/components/common/BaseInput.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import BaseAvatar from '@/components/common/BaseAvatar.vue'
 import TagChip from '@/components/common/TagChip.vue'
+import PasswordChangeModal from '@/components/PasswordChangeModal.vue'
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024 // 5MB
 
@@ -20,6 +21,7 @@ const form = ref({ nickname: '', email: '' })
 const sectors = ref([])
 const selected = ref(new Set())
 const saving = ref(false)
+const showPwModal = ref(false)
 
 const fileInput = ref(null)
 const imageFile = ref(null) // 새로 선택한 파일
@@ -136,12 +138,18 @@ async function save() {
           </button>
         </div>
       </div>
+      <BaseButton variant="outline" block @click="showPwModal = true">비밀번호 변경하기</BaseButton>
     </div>
     <template #footer>
-      <BaseButton variant="ghost" @click="emit('update:modelValue', false)">취소</BaseButton>
-      <BaseButton block :disabled="saving" @click="save">{{ saving ? '저장 중…' : '저장하기' }}</BaseButton>
+      <BaseButton class="foot-save" :disabled="saving" @click="save">
+        {{ saving ? '저장 중…' : '저장하기' }}
+      </BaseButton>
+      <BaseButton class="foot-cancel" variant="ghost" @click="emit('update:modelValue', false)">
+        취소
+      </BaseButton>
     </template>
   </BaseModal>
+  <PasswordChangeModal v-if="showPwModal" v-model="showPwModal" />
 </template>
 
 <style scoped>
@@ -179,5 +187,12 @@ async function save() {
   background: none;
   border: none;
   padding: 0;
+}
+.foot-save {
+  flex: 1.6;
+}
+.foot-cancel {
+  flex: 1;
+  white-space: nowrap;
 }
 </style>

@@ -10,7 +10,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncDate
 from django.utils import timezone
 from .models import UserDailyVisit
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserSerializer, PasswordChangeSerializer
 from tutors.models import UserQuizHistory
 
 User = get_user_model()
@@ -39,6 +39,20 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     # URL에서 pk를 받지 않고, 현재 토큰으로 인증된 유저 객체를 바로 반환
     def get_object(self):
         return self.request.user
+
+
+class PasswordChangeView(APIView):
+    """
+    비밀번호 변경 뷰 [F003]
+    현재 비밀번호를 확인하고 새 비밀번호로 변경. 로그인한 유저만 접근 가능.
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK)
 
 
 class ProfileStatsView(APIView):

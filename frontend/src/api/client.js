@@ -3,6 +3,12 @@ import axios from 'axios'
 const ACCESS_KEY = 'jugopa_access'
 const REFRESH_KEY = 'jugopa_refresh'
 
+// 토큰 변경 구독자 (스토어가 반응형 상태를 동기화하는 데 사용)
+const listeners = new Set()
+function notify() {
+  for (const fn of listeners) fn()
+}
+
 export const tokenStore = {
   get access() {
     return localStorage.getItem(ACCESS_KEY)
@@ -13,10 +19,16 @@ export const tokenStore = {
   set({ access, refresh }) {
     if (access) localStorage.setItem(ACCESS_KEY, access)
     if (refresh) localStorage.setItem(REFRESH_KEY, refresh)
+    notify()
   },
   clear() {
     localStorage.removeItem(ACCESS_KEY)
     localStorage.removeItem(REFRESH_KEY)
+    notify()
+  },
+  subscribe(fn) {
+    listeners.add(fn)
+    return () => listeners.delete(fn)
   },
 }
 
