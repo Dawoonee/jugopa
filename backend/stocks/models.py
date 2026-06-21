@@ -27,11 +27,11 @@ class StockPriceDaily(models.Model):
 
 class DailyMarketWeather(models.Model):
     class WeatherStatus(models.TextChoices):
+        VERY_SUNNY = 'VERY_SUNNY', '매우맑음'
         SUNNY = 'SUNNY', '맑음'
         CLOUDY = 'CLOUDY', '흐림'
         RAINY = 'RAINY', '비'
-        SNOWY = 'SNOWY', '눈'
-        STORMY = 'STORMY', '폭풍'
+        STORMY = 'STORMY', '돌풍'
     
     target_date = models.DateField(unique=True, db_index=True)
     weather_status = models.CharField(
