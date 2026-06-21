@@ -22,10 +22,10 @@ class Command(BaseCommand):
     help = 'RSS로 경제 뉴스를 수집·분류하고, 추천 섹터를 Claude로 요약해 카드뉴스를 저장합니다.'
 
     def handle(self, *args, **options):
-        sectors = list(Sector.objects.filter(is_active=True))
+        sectors = list(Sector.objects.filter(level=Sector.Level.MID, is_active=True))
         if not sectors:
             self.stdout.write(self.style.ERROR(
-                "활성 섹터가 없습니다. 먼저 `python manage.py load_sectors`를 실행하세요."
+                "활성 중분류 섹터가 없습니다. 먼저 `python manage.py load_sectors`를 실행하세요."
             ))
             return
 

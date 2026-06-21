@@ -10,16 +10,30 @@ from .serializers import _stock_payload
 
 @api_view(['GET'])
 def sectors_list(request):
-	"""관심 업종 선택 그리드용 — 활성 섹터(업종) 목록을 반환한다."""
-	sectors = Sector.objects.filter(is_active=True).order_by('display_order', 'name')
+	"""관심 업종 선택 그리드용 — 활성 섹터(업종) 목록을 반환한다.
+
+	?level=LARGE|MID 로 분류 단위를 지정한다(기본값 LARGE: 관심 섹터는 대분류만 선택).
+	"""
+	level = request.query_params.get('level', Sector.Level.LARGE)
+	sectors = Sector.objects.filter(is_active=True)
+	if level in (Sector.Level.LARGE, Sector.Level.MID):
+		sectors = sectors.filter(level=level)
+	sectors = sectors.order_by('display_order', 'name')
 	return Response(SectorSerializer(sectors, many=True).data)
 
 
 @api_view(['GET'])
 def sector_stocks(request, sector_id):
-	"""추천 화면 관심 업종 탭용 — 해당 섹터의 대표 종목 목록(최신 시세 포함)."""
+	"""추천 화면 관심 업종 탭용 — 해당 섹터의 대표 종목 목록(최신 시세 포함).
+
+	대분류(LARGE)가 들어오면 자식 중분류들의 SectorStock을 rank 순으로 집계한다.
+	"""
 	sector = get_object_or_404(Sector, pk=sector_id)
-	links = SectorStock.objects.filter(sector=sector).select_related('stock').order_by('rank')
+	if sector.level == Sector.Level.LARGE:
+		links = SectorStock.objects.filter(sector__parent=sector)
+	else:
+		links = SectorStock.objects.filter(sector=sector)
+	links = links.select_related('stock').order_by('rank', 'sector__display_order')
 	return Response({
 		'sector_id': sector.id,
 		'sector_name': sector.name,
