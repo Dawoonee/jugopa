@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import ToastHost from '@/components/common/ToastHost.vue'
 import ChatbotWidget from '@/components/ChatbotWidget.vue'
+import LoginModal from '@/components/LoginModal.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
@@ -23,6 +24,7 @@ onMounted(() => {
   </DefaultLayout>
   <ToastHost />
   <ChatbotWidget />
+  <LoginModal v-if="auth.showLoginModal" />
 </template>
 
 <style>

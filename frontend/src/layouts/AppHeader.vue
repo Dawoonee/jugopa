@@ -21,7 +21,11 @@ const initial = computed(() => {
 })
 
 function goAuth() {
-  router.push({ name: auth.isAuthenticated ? 'mypage' : 'login' })
+  if (auth.isAuthenticated) {
+    router.push({ name: 'mypage' })
+  } else {
+    auth.showLoginModal = true
+  }
 }
 
 function onLogout() {

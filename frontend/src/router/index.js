@@ -32,7 +32,6 @@ const routes = [
     component: () => import('@/views/MyPageView.vue'),
     meta: { requiresAuth: true },
   },
-  { path: '/login', name: 'login', component: () => import('@/views/LoginView.vue'), meta: { guestOnly: true } },
   { path: '/signup', name: 'signup', component: () => import('@/views/SignupView.vue'), meta: { guestOnly: true } },
 ]
 
@@ -44,10 +43,15 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to) => {
+router.beforeEach((to, from) => {
   const authed = !!tokenStore.access
   if (to.meta.requiresAuth && !authed) {
-    return { name: 'login', query: { redirect: to.fullPath } }
+    import('@/stores/auth').then(({ useAuthStore }) => {
+      const auth = useAuthStore()
+      auth.showLoginModal = true
+    })
+    // If it's a direct visit (no previous route), go home. Otherwise stay on the current page.
+    return from.name ? false : { name: 'home' }
   }
   if (to.meta.guestOnly && authed) {
     return { name: 'home' }

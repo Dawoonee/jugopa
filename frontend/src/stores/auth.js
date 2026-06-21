@@ -9,6 +9,8 @@ export const useAuthStore = defineStore('auth', () => {
   const accessToken = ref(tokenStore.access)
   const isAuthenticated = computed(() => !!accessToken.value)
 
+  const showLoginModal = ref(false)
+
   // localStorage(tokenStore) 변경 시 반응형 상태 동기화
   // 로그인/로그아웃뿐 아니라 인터셉터의 토큰 재발급·만료까지 반영
   tokenStore.subscribe(() => {
@@ -40,5 +42,5 @@ export const useAuthStore = defineStore('auth', () => {
     tokenStore.clear()
   }
 
-  return { user, isAuthenticated, login, signup, fetchProfile, logout }
+  return { user, isAuthenticated, showLoginModal, login, signup, fetchProfile, logout }
 })

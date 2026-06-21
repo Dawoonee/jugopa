@@ -48,7 +48,8 @@ async function submit() {
     })
     toast.show('비밀번호가 변경되었어요. 다시 로그인해주세요', 'success')
     auth.logout()
-    router.push({ name: 'login' })
+    emit('update:modelValue', false)
+    auth.showLoginModal = true
   } catch (e) {
     const msg = e.response?.data
       ? Object.values(e.response.data).flat()[0]
