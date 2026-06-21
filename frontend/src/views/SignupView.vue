@@ -68,6 +68,11 @@ async function submit() {
     loading.value = false
   }
 }
+
+function goLogin() {
+  router.push({ name: 'home' })
+  auth.showLoginModal = true
+}
 </script>
 
 <template>
@@ -118,7 +123,7 @@ async function submit() {
 
       <p class="auth-foot">
         이미 계정이 있으신가요?
-        <RouterLink :to="{ name: 'login' }" class="link">로그인</RouterLink>
+        <button type="button" @click="goLogin" class="link">로그인</button>
       </p>
     </div>
   </div>
@@ -188,7 +193,15 @@ async function submit() {
   color: var(--text-secondary);
 }
 .link {
+  background: none;
+  border: none;
+  padding: 0;
   color: var(--accent);
   font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
+.link:hover {
+  text-decoration: underline;
 }
 </style>
