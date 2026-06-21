@@ -157,8 +157,8 @@ function onUpdated() {
     <!-- 액션 -->
     <section class="actions">
       <BaseButton block @click="showEdit = true">회원 정보 수정</BaseButton>
-      <BaseButton variant="outline" block @click="onLogout">로그아웃</BaseButton>
-      <BaseButton variant="outline" block class="withdraw-btn" @click="showWithdraw = true">회원 탈퇴</BaseButton>
+      <BaseButton variant="secondary" block @click="onLogout">로그아웃</BaseButton>
+      <BaseButton variant="destructive" block @click="showWithdraw = true">회원 탈퇴</BaseButton>
     </section>
 
     <ProfileEditModal v-if="showEdit" v-model="showEdit" @updated="onUpdated" />
@@ -302,12 +302,6 @@ function onUpdated() {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-}
-.withdraw-btn {
-  color: var(--text-tertiary);
-}
-.withdraw-btn:hover {
-  color: var(--danger);
 }
 .withdraw {
   text-align: center;

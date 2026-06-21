@@ -95,8 +95,8 @@ async function submitPost() {
         </label>
       </div>
       <template #footer>
-        <BaseButton variant="ghost" @click="showWrite = false">취소</BaseButton>
-        <BaseButton block @click="submitPost">등록</BaseButton>
+        <BaseButton class="foot-save" @click="submitPost">등록</BaseButton>
+        <BaseButton class="foot-cancel" variant="ghost" @click="showWrite = false">취소</BaseButton>
       </template>
     </BaseModal>
   </div>
@@ -133,6 +133,13 @@ async function submitPost() {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+.foot-save {
+  flex: 1.6;
+}
+.foot-cancel {
+  flex: 1;
+  white-space: nowrap;
 }
 .field-label {
   display: block;
