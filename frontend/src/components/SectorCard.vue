@@ -62,6 +62,9 @@ function gaugeWidth(rate) {
 <style scoped>
 .sector {
   min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base);
 }
 .sector:hover {
@@ -69,11 +72,14 @@ function gaugeWidth(rate) {
   border-color: var(--border-strong);
 }
 .card-link {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   color: inherit;
 }
 .read-more {
   display: inline-block;
+  margin-top: auto;
   margin-bottom: var(--space-4);
   font-size: 12px;
   font-weight: 700;

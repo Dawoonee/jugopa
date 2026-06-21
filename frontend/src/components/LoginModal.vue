@@ -43,7 +43,7 @@ function goSignup() {
 
 <template>
   <div class="modal-overlay" @click.self="close">
-    <div class="auth-card card">
+    <div class="auth-card login-card card">
       <button class="close-btn" @click="close" aria-label="닫기">
         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
           <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -94,15 +94,16 @@ function goSignup() {
   to { opacity: 1; backdrop-filter: blur(8px); }
 }
 
-.auth-card {
+.auth-card.login-card {
   position: relative;
   width: 100%;
   max-width: 400px;
-  background: var(--bg-primary);
+  background: var(--bg-elevated);
   border-radius: var(--radius-lg);
   padding: var(--space-6) var(--space-5);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--border-strong);
 }
 
 @keyframes slideUp {
@@ -167,5 +168,17 @@ function goSignup() {
 }
 .link:hover {
   text-decoration: underline;
+}
+</style>
+
+<style>
+/* 전역 스코프로 로그인 모달 배경만 제어 (scoped 버그 방지) */
+.theme-light .auth-card.login-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+}
+.theme-dark .auth-card.login-card {
+  background: rgba(22, 27, 34, 0.92);
+  backdrop-filter: blur(16px);
 }
 </style>

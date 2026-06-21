@@ -14,16 +14,26 @@ const tabs = computed(() => [
 
 <template>
   <nav class="tabbar">
-    <RouterLink
-      v-for="tab in tabs"
-      :key="tab.name"
-      :to="{ name: tab.name }"
-      class="tab"
-      active-class="is-active"
-    >
-      <span class="tab-icon">{{ tab.icon }}</span>
-      <span class="tab-label">{{ tab.label }}</span>
-    </RouterLink>
+    <template v-for="tab in tabs" :key="tab.name">
+      <a
+        v-if="tab.name === 'login'"
+        href="#"
+        class="tab"
+        @click.prevent="auth.showLoginModal = true"
+      >
+        <span class="tab-icon">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+      </a>
+      <RouterLink
+        v-else
+        :to="{ name: tab.name }"
+        class="tab"
+        active-class="is-active"
+      >
+        <span class="tab-icon">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+      </RouterLink>
+    </template>
   </nav>
 </template>
 

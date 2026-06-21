@@ -64,7 +64,7 @@ onMounted(async () => {
         <Skeleton v-for="n in 2" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
       <div v-else-if="recommendCards.length" class="carousel">
-        <SectorCard v-for="c in recommendCards" :key="c.sector_name" :card="c" />
+        <SectorCard v-for="c in recommendCards.slice(0, 3)" :key="c.sector_name" :card="c" />
       </div>
     </section>
 

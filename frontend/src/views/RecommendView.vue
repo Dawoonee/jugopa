@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { newsApi } from '@/api/news'
 import { useAuthStore } from '@/stores/auth'
 import SectorCard from '@/components/SectorCard.vue'
@@ -19,6 +19,11 @@ const interestSectors = ref([]) // [{id, name}]
 const activeSector = ref(null)
 const sectorStocks = ref([])
 const stocksLoading = ref(false)
+const showAllStocks = ref(false)
+
+const displayedStocks = computed(() => {
+  return showAllStocks.value ? sectorStocks.value : sectorStocks.value.slice(0, 5)
+})
 
 onMounted(async () => {
   try {
@@ -55,6 +60,7 @@ watch(activeSector, async (id) => {
     sectorStocks.value = []
   } finally {
     stocksLoading.value = false
+    showAllStocks.value = false
   }
 })
 </script>
@@ -92,7 +98,12 @@ watch(activeSector, async (id) => {
           <Skeleton v-for="n in 3" :key="n" height="52px" radius="var(--radius-md)" />
         </div>
         <EmptyState v-else-if="!sectorStocks.length" icon="📭" title="등록된 종목이 없어요" />
-        <StockListRow v-else v-for="s in sectorStocks" :key="s.stock_code" :stock="s" />
+        <template v-else>
+          <StockListRow v-for="s in displayedStocks" :key="s.stock_code" :stock="s" />
+          <div v-if="sectorStocks.length > 5 && !showAllStocks" class="more-wrap">
+            <button class="more-btn" @click="showAllStocks = true">더보기</button>
+          </div>
+        </template>
       </div>
     </section>
 
@@ -104,7 +115,7 @@ watch(activeSector, async (id) => {
       </div>
       <EmptyState v-else-if="!cards.length" icon="📰" title="추천 섹터가 아직 없어요" />
       <div v-else class="carousel">
-        <SectorCard v-for="c in cards" :key="c.sector_name" :card="c" />
+        <SectorCard v-for="c in cards.slice(0, 3)" :key="c.sector_name" :card="c" />
       </div>
     </section>
   </div>
@@ -201,5 +212,24 @@ watch(activeSector, async (id) => {
 }
 .carousel > * {
   scroll-snap-align: start;
+}
+.more-wrap {
+  padding: var(--space-2) 0 0;
+  display: flex;
+  justify-content: center;
+}
+.more-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  transition: background 0.2s, color 0.2s;
+}
+.more-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 </style>
