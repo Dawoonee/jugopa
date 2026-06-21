@@ -46,7 +46,7 @@ function formatDate(d) {
     <EmptyState v-else-if="!card" icon="📰" title="카드뉴스를 찾을 수 없어요" />
 
     <template v-else>
-      <header class="news-head">
+      <header class="news-head card">
         <div class="head-meta">
           <span class="rank">#{{ card.rank }}</span>
           <span class="sector">{{ card.sector_name }}</span>

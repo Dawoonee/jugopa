@@ -25,7 +25,9 @@ onMounted(async () => {
   <div class="page knowledge theme-light">
     <div class="weather-bg" :style="{ backgroundImage: `url(${bgQuiz})`, filter: 'blur(4px)', transform: 'scale(1.02)' }"></div>
     <RouterLink :to="{ name: 'home' }" class="nav-arrow right" aria-label="메인 페이지">›</RouterLink>
-    <span class="eyebrow">오늘의 경제 용어</span>
+    <header class="card" style="padding: 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center;">
+      <span class="eyebrow" style="margin-bottom: 0;">오늘의 경제 용어</span>
+    </header>
 
     <div v-if="loading" class="card">
       <Skeleton height="32px" width="50%" />

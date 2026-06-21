@@ -63,7 +63,7 @@ watch(activeSector, async (id) => {
   <div class="page recommend" :class="themeClass">
     <div class="weather-bg" :style="bgStyle"></div>
     <RouterLink :to="{ name: 'home' }" class="nav-arrow left" aria-label="메인 페이지">‹</RouterLink>
-    <header class="rec-head">
+    <header class="rec-head card">
       <span class="eyebrow">AI DAILY PICK</span>
       <h1 class="rec-title">주식 추천</h1>
       <span class="badge"><span class="dot" /> 국내 시장 분석 완료</span>

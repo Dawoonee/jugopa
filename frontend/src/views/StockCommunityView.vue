@@ -69,7 +69,7 @@ async function submitPost() {
 <template>
   <div class="page community" :class="themeClass">
     <div class="weather-bg" :style="bgStyle"></div>
-    <header class="comm-top">
+    <header class="comm-top card" style="padding: 16px; margin-bottom: 16px;">
       <RouterLink :to="{ name: 'stock-detail', params: { code } }" class="back">‹ {{ stock?.stock_name || '종목' }}</RouterLink>
       <span class="count num">{{ posts.length }}개의 글</span>
     </header>

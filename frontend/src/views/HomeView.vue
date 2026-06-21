@@ -38,7 +38,7 @@ onMounted(async () => {
     :class="themeClass"
   >
     <div class="weather-bg" :style="bgStyle"></div>
-    <header class="home-head">
+    <header class="home-head card" style="padding: 16px; margin-bottom: 16px;">
       <RouterLink :to="{ name: 'knowledge' }" class="nav-arrow left" aria-label="경제 지식">‹</RouterLink>
       <p class="home-date">{{ today }}</p>
       <RouterLink :to="{ name: 'recommend' }" class="nav-arrow right" aria-label="주식 추천">›</RouterLink>

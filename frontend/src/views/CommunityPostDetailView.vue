@@ -174,7 +174,9 @@ function formatDate(d) {
 <template>
   <div class="page post-detail" :class="themeClass">
     <div class="weather-bg" :style="bgStyle"></div>
-    <button class="back" type="button" @click="router.back()">‹ 뒤로</button>
+    <header class="card" style="padding: 16px; margin-bottom: 16px;">
+      <button class="back" type="button" @click="router.back()" style="margin-bottom: 0;">‹ 뒤로</button>
+    </header>
 
     <div v-if="loading" class="card">
       <Skeleton height="22px" width="50%" />

@@ -105,7 +105,7 @@ async function toggleBookmark() {
     </div>
 
     <template v-else-if="stock">
-      <header class="detail-head">
+      <header class="detail-head card" style="padding: 16px; margin-bottom: 16px;">
         <div>
           <h1 class="stock-name">{{ stock.stock_name }}</h1>
           <span class="stock-code num">{{ stock.stock_code }} · {{ stock.market_type }}</span>

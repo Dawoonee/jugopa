@@ -57,8 +57,10 @@ function optionState(opt) {
     <EmptyState v-else-if="!quiz" title="퀴즈가 없어요" description="잠시 후 다시 시도해 주세요" />
 
     <template v-else>
-      <span class="eyebrow">오늘의 퀴즈</span>
-      <h1 class="quiz-q">{{ quiz.question }}</h1>
+      <header class="card" style="padding: 16px; margin-bottom: 16px;">
+        <span class="eyebrow">오늘의 퀴즈</span>
+        <h1 class="quiz-q" style="margin-top: 8px; margin-bottom: 0;">{{ quiz.question }}</h1>
+      </header>
 
       <ul class="options">
         <li v-for="(opt, i) in quiz.options" :key="i">
