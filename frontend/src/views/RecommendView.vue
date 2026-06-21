@@ -122,10 +122,15 @@ watch(activeSector, async (id) => {
   margin-bottom: var(--space-6);
 }
 .eyebrow {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #ffffff;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: var(--accent);
+  margin-bottom: 8px;
 }
 .rec-title {
   font-size: 28px;

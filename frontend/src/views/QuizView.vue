@@ -114,8 +114,8 @@ function optionState(opt) {
   display: inline-block;
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
   font-size: 12px;
   font-weight: 700;
 }
