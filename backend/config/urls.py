@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('api/v1/tutors/', include('tutors.urls')),
     path('api/v1/accounts/', include('accounts.urls')),
+    path('api/v1/chatbot/', include('chatbot.urls')),
 ]
 
 # 개발 환경에서 업로드된 미디어 파일 서빙
