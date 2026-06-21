@@ -1,4 +1,4 @@
-# Jugopa 백엔드 의존성
+
 Django>=5.2,<5.3
 djangorestframework
 djangorestframework-simplejwt
@@ -6,20 +6,19 @@ django-cors-headers
 django-environ
 Pillow
 
-# news 크롤러
+
 feedparser
 beautifulsoup4
 anthropic
 pydantic
 
-# tutors 용어 엑셀 적재
+
 pandas
 openpyxl
 
-# stocks 시세 API 호출
 requests
 
-# 테스트
+
 pytest
 pytest-django
 pytest-cov

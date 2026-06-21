@@ -17,7 +17,7 @@ def get_or_create_today_term():
     용어 데이터가 전혀 없으면 None을 반환한다.
     '오늘의 용어'와 '오늘의 퀴즈'가 같은 용어를 가리키도록 양쪽에서 공통 사용한다.
     """
-    today_date = timezone.now().date()
+    today_date = timezone.localdate()
     daily_term = DailyTerm.objects.filter(date=today_date).select_related('term').first()
     if not daily_term:
         terms = list(Term.objects.all())

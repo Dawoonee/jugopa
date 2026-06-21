@@ -4,6 +4,7 @@ import { onMounted, onBeforeUnmount } from 'vue'
 const props = defineProps({
   modelValue: { type: Boolean, default: true },
   title: { type: String, default: '' },
+  maxWidth: { type: String, default: '440px' },
 })
 const emit = defineEmits(['update:modelValue', 'close'])
 
@@ -22,7 +23,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
   <Teleport to="body">
     <transition name="modal">
       <div v-if="modelValue" class="backdrop" @click.self="close">
-        <div class="sheet" role="dialog" aria-modal="true">
+        <div class="sheet" role="dialog" aria-modal="true" :style="{ '--modal-max-width': maxWidth }">
           <header v-if="title || $slots.header" class="sheet-head">
             <slot name="header">
               <h3 class="sheet-title">{{ title }}</h3>
@@ -55,12 +56,19 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
 }
 .sheet {
   width: 100%;
-  max-width: 440px;
+  max-width: var(--modal-max-width);
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-elevated);
   overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.sheet-body {
+  padding: var(--space-3) var(--space-5) var(--space-5);
+  overflow-y: auto;
 }
 .sheet-head {
   display: flex;

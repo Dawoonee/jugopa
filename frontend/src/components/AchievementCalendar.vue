@@ -146,23 +146,27 @@ function nextMonth() {
     </Teleport>
 
     <!-- click: 그날 푼 문제/보기/내 답·정답·해설 (튜터 퀴즈 화면 형태) -->
-    <BaseModal v-if="showDetail" v-model="showDetail" :title="selectedDetail?.date || ''">
+    <BaseModal v-if="showDetail" v-model="showDetail" :title="selectedDetail?.date || ''" maxWidth="760px">
       <div v-if="selectedDetail" class="review">
-        <h3 class="rv-q">{{ selectedDetail.question }}</h3>
+        <div class="rv-col">
+          <h3 class="rv-q">{{ selectedDetail.question }}</h3>
 
-        <ul class="rv-options">
-          <li v-for="(opt, i) in selectedDetail.options || []" :key="i">
-            <div class="rv-option" :class="optionState(opt, selectedDetail)">
-              <span class="rv-no">{{ i + 1 }}</span>
-              <span class="rv-text">{{ opt }}</span>
-            </div>
-          </li>
-        </ul>
+          <ul class="rv-options">
+            <li v-for="(opt, i) in selectedDetail.options || []" :key="i">
+              <div class="rv-option" :class="optionState(opt, selectedDetail)">
+                <span class="rv-no">{{ i + 1 }}</span>
+                <span class="rv-text">{{ opt }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-        <div class="rv-feedback" :class="selectedDetail.is_correct ? 'ok' : 'no'">
-          <p class="rv-title">{{ selectedDetail.is_correct ? '정답이에요! 🎉' : '아쉬워요 😅' }}</p>
-          <p class="rv-answer">정답: {{ selectedDetail.answer }}</p>
-          <p class="rv-explain">{{ selectedDetail.explanation }}</p>
+        <div class="rv-col">
+          <div class="rv-feedback" :class="selectedDetail.is_correct ? 'ok' : 'no'">
+            <p class="rv-title">{{ selectedDetail.is_correct ? '정답이에요! 🎉' : '아쉬워요 😅' }}</p>
+            <p class="rv-answer">정답: {{ selectedDetail.answer }}</p>
+            <p class="rv-explain">{{ selectedDetail.explanation }}</p>
+          </div>
         </div>
       </div>
     </BaseModal>
@@ -293,6 +297,12 @@ function nextMonth() {
 
 /* click 복습 팝업 (튜터 퀴즈 화면 형태) */
 .review {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  aspect-ratio: 4 / 3;
+}
+.rv-col {
   display: flex;
   flex-direction: column;
 }
@@ -339,7 +349,7 @@ function nextMonth() {
   background: var(--danger-soft);
 }
 .rv-feedback {
-  margin-top: var(--space-4);
+  flex: 1;
   padding: var(--space-4);
   border-radius: var(--radius-md);
   border: 1.5px solid var(--border-subtle);
@@ -366,5 +376,13 @@ function nextMonth() {
   font-size: 14px;
   line-height: 1.7;
   white-space: pre-line;
+}
+
+@media (max-width: 767px) {
+  .review {
+    grid-template-columns: 1fr;
+    aspect-ratio: auto;
+    gap: var(--space-4);
+  }
 }
 </style>
