@@ -30,7 +30,7 @@ const option = computed(() => ({
     textStyle: { color: '#9aa5b1' },
     top: 0,
   },
-  grid: { left: 8, right: 8, bottom: 4, top: 36, outerBounds: true },
+  grid: { left: 45, right: 45, bottom: 20, top: 36 },
   xAxis: {
     type: 'category',
     data: props.labels,
