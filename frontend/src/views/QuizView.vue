@@ -4,6 +4,7 @@ import { tutorsApi } from '@/api/tutors'
 import BaseButton from '@/components/common/BaseButton.vue'
 import Skeleton from '@/components/common/Skeleton.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import bgQuiz from '@/assets/backgrounds/quiz.png'
 
 const quiz = ref(null)
 const loading = ref(true)
@@ -43,7 +44,8 @@ function optionState(opt) {
 </script>
 
 <template>
-  <div class="page quiz">
+  <div class="page quiz theme-light">
+    <div class="weather-bg" :style="{ backgroundImage: `url(${bgQuiz})`, filter: 'blur(4px)', transform: 'scale(1.02)' }"></div>
     <RouterLink :to="{ name: 'knowledge' }" class="back-link">‹ 경제 용어 다시 보기</RouterLink>
 
     <div v-if="loading" class="card">

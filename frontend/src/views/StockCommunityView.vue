@@ -11,10 +11,12 @@ import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import Skeleton from '@/components/common/Skeleton.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const route = useRoute()
 const auth = useAuthStore()
 const toast = useToastStore()
+const { fetchWeather, themeClass, bgStyle } = useWeatherTheme()
 
 const code = route.params.code
 const stock = ref(null)
@@ -31,6 +33,7 @@ onMounted(async () => {
     const [detail, list] = await Promise.allSettled([stocksApi.detail(code), communityApi.posts(code)])
     if (detail.status === 'fulfilled') stock.value = detail.value.data
     if (list.status === 'fulfilled') posts.value = list.value.data
+    await fetchWeather()
   } finally {
     loading.value = false
   }
@@ -43,6 +46,7 @@ function onScroll(e) {
   }
 }
 onMounted(() => window.addEventListener('scroll', onScroll))
+onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 async function submitPost() {
   if (!draft.value.content.trim()) return
@@ -63,7 +67,8 @@ async function submitPost() {
 </script>
 
 <template>
-  <div class="page community">
+  <div class="page community" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
     <header class="comm-top">
       <RouterLink :to="{ name: 'stock-detail', params: { code } }" class="back">‹ {{ stock?.stock_name || '종목' }}</RouterLink>
       <span class="count num">{{ posts.length }}개의 글</span>
