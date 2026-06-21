@@ -4,14 +4,14 @@ defineProps({
 })
 
 const moodMap = {
-  SUNNY: { title: '오늘은 맑음 ☀️', tone: 'sunny' },
-  CLOUDY: { title: '구름 조금 ☁️', tone: 'cloudy' },
-  RAINY: { title: '비 소식 🌧️', tone: 'rainy' },
-  SNOWY: { title: '눈 내림 ❄️', tone: 'snowy' },
-  STORMY: { title: '폭풍주의 ⚡', tone: 'stormy' },
+  VERY_SUNNY: { title: '매우 맑음 ☀️', tone: 'very_sunny' },
+  SUNNY: { title: '오늘은 맑음 🌤️', tone: 'sunny' },
+  CLOUDY: { title: '흐림 ☁️', tone: 'cloudy' },
+  RAINY: { title: '비 🌧️', tone: 'rainy' },
+  STORMY: { title: '돌풍 ⛈️', tone: 'stormy' },
 }
 function mood(status) {
-  return moodMap[status] || { title: '시장 분석 중', tone: 'cloudy' }
+  return moodMap[status] || { title: '시장 분석 중 ☁️', tone: 'cloudy' }
 }
 </script>
 
@@ -32,8 +32,12 @@ function mood(status) {
   gap: var(--space-5);
   padding: var(--space-6);
   border-radius: var(--radius-xl);
-  background: radial-gradient(120% 120% at 0% 0%, var(--bg-elevated), var(--bg-surface));
-  border: 1px solid var(--border-subtle);
+  /* Glassmorphism Effect */
+  background: var(--glass-bg, rgba(255, 255, 255, 0.4));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 .emoji {
   font-size: 64px;
@@ -51,12 +55,11 @@ function mood(status) {
 }
 .mood-msg {
   margin-top: 6px;
-  color: var(--text-secondary);
+  color: inherit;
+  opacity: 0.85;
   font-size: 14px;
   line-height: 1.6;
 }
-.mood--sunny { box-shadow: inset 0 0 0 1px rgba(245, 180, 80, 0.25); }
-.mood--stormy { box-shadow: inset 0 0 0 1px rgba(240, 68, 82, 0.25); }
 @media (max-width: 767px) {
   .mood {
     flex-direction: column;

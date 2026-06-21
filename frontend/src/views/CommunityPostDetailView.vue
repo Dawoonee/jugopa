@@ -8,6 +8,7 @@ import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import Skeleton from '@/components/common/Skeleton.vue'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,9 +28,12 @@ const showDelete = ref(false)
 const newComment = ref('')
 const editingCommentId = ref(null)
 const commentDraft = ref('')
+const delCommentId = ref(null)
 
 const isPostOwner = computed(() => post.value && auth.user?.id === post.value.user)
 const comments = computed(() => post.value?.comments || [])
+
+const { fetchWeather, themeClass, bgStyle } = useWeatherTheme()
 
 onMounted(async () => {
   if (!auth.user) await auth.fetchProfile().catch(() => {})
@@ -41,6 +45,7 @@ async function loadPost() {
   try {
     const { data } = await communityApi.post(postId)
     post.value = data
+    await fetchWeather()
   } catch (e) {
     post.value = null
   } finally {
@@ -167,7 +172,8 @@ function formatDate(d) {
 </script>
 
 <template>
-  <div class="page post-detail">
+  <div class="page post-detail" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
     <button class="back" type="button" @click="router.back()">‹ 뒤로</button>
 
     <div v-if="loading" class="card">

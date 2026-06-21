@@ -12,10 +12,10 @@ from .index_collector import TARGET_INDICES
 # combined(코스피·코스닥 평균 등락률, %) 구간별 (상태, 메시지).
 # 큰 값(상승)부터 검사한다.
 WEATHER_THRESHOLDS = [
-	(1.5, DailyMarketWeather.WeatherStatus.SUNNY, "강세 마감 — 투자 심리가 좋은 날입니다."),
-	(0.5, DailyMarketWeather.WeatherStatus.CLOUDY, "완만한 상승 흐름입니다."),
-	(-0.5, DailyMarketWeather.WeatherStatus.RAINY, "약보합 — 관망세가 짙습니다."),
-	(-1.5, DailyMarketWeather.WeatherStatus.SNOWY, "약세 — 변동성에 주의하세요."),
+	(1.5, DailyMarketWeather.WeatherStatus.VERY_SUNNY, "강한 강세 마감 — 투자 심리가 매우 좋은 날입니다."),
+	(0.5, DailyMarketWeather.WeatherStatus.SUNNY, "완만한 상승 흐름입니다."),
+	(-0.5, DailyMarketWeather.WeatherStatus.CLOUDY, "약보합 — 관망세가 짙습니다."),
+	(-1.5, DailyMarketWeather.WeatherStatus.RAINY, "약세 — 변동성에 주의하세요."),
 ]
 # 위 어느 구간에도 못 미치면(최저) STORMY.
 WEATHER_FALLBACK = (DailyMarketWeather.WeatherStatus.STORMY, "큰 하락 — 변동성 경계가 필요합니다.")

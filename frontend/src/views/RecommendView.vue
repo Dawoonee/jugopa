@@ -7,10 +7,13 @@ import StockListRow from '@/components/StockListRow.vue'
 import StockSearchBar from '@/components/StockSearchBar.vue'
 import Skeleton from '@/components/common/Skeleton.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const auth = useAuthStore()
 const cards = ref([])
 const loading = ref(true)
+
+const { fetchWeather, themeClass, bgStyle } = useWeatherTheme()
 
 const interestSectors = ref([]) // [{id, name}]
 const activeSector = ref(null)
@@ -21,6 +24,7 @@ onMounted(async () => {
   try {
     const { data } = await newsApi.sectorsToday()
     cards.value = data
+    await fetchWeather()
   } finally {
     loading.value = false
   }
@@ -56,7 +60,9 @@ watch(activeSector, async (id) => {
 </script>
 
 <template>
-  <div class="page recommend">
+  <div class="page recommend" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
+    <RouterLink :to="{ name: 'home' }" class="nav-arrow left" aria-label="메인 페이지">‹</RouterLink>
     <header class="rec-head">
       <span class="eyebrow">AI DAILY PICK</span>
       <h1 class="rec-title">주식 추천</h1>
@@ -105,6 +111,10 @@ watch(activeSector, async (id) => {
 </template>
 
 <style scoped>
+.page.recommend {
+  min-height: 100vh;
+  transition: color 0.5s ease;
+}
 .rec-head {
   display: flex;
   flex-direction: column;
@@ -112,10 +122,15 @@ watch(activeSector, async (id) => {
   margin-bottom: var(--space-6);
 }
 .eyebrow {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #ffffff;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: var(--accent);
+  margin-bottom: 8px;
 }
 .rec-title {
   font-size: 28px;

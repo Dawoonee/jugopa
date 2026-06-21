@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { newsApi } from '@/api/news'
 import Skeleton from '@/components/common/Skeleton.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const route = useRoute()
 const router = useRouter()
@@ -11,10 +12,13 @@ const router = useRouter()
 const card = ref(null)
 const loading = ref(true)
 
+const { fetchWeather, themeClass, bgStyle } = useWeatherTheme()
+
 onMounted(async () => {
   try {
     const { data } = await newsApi.cardNewsDetail(route.params.id)
     card.value = data
+    await fetchWeather()
   } catch (e) {
     card.value = null
   } finally {
@@ -29,7 +33,8 @@ function formatDate(d) {
 </script>
 
 <template>
-  <div class="page card-news">
+  <div class="page card-news" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
     <button class="back" type="button" @click="router.back()">‹ 뒤로</button>
 
     <div v-if="loading" class="card">
@@ -41,7 +46,7 @@ function formatDate(d) {
     <EmptyState v-else-if="!card" icon="📰" title="카드뉴스를 찾을 수 없어요" />
 
     <template v-else>
-      <header class="news-head">
+      <header class="news-head card">
         <div class="head-meta">
           <span class="rank">#{{ card.rank }}</span>
           <span class="sector">{{ card.sector_name }}</span>

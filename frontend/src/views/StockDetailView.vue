@@ -10,6 +10,7 @@ import DayRangeDoughnut from '@/components/DayRangeDoughnut.vue'
 import PriceVolumeCombo from '@/components/PriceVolumeCombo.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import Skeleton from '@/components/common/Skeleton.vue'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +21,8 @@ const stock = ref(null)
 const loading = ref(true)
 const bookmarked = ref(false)
 const previewPosts = ref([])
+
+const { fetchWeather, themeClass, bgStyle } = useWeatherTheme()
 
 // 최근 → 과거 순으로 와도 차트는 오래된 → 최신 정렬
 const prices = computed(() => {
@@ -44,6 +47,7 @@ onMounted(async () => {
   try {
     const { data } = await stocksApi.detail(code)
     stock.value = data
+    await fetchWeather()
   } catch (e) {
     toast.show('종목 정보를 불러오지 못했어요', 'error')
   } finally {
@@ -88,7 +92,8 @@ async function toggleBookmark() {
 </script>
 
 <template>
-  <div class="page detail">
+  <div class="page detail" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
     <button class="back" type="button" @click="router.back()">‹ 뒤로</button>
 
     <div v-if="loading" class="card">

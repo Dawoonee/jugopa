@@ -62,7 +62,6 @@ function gaugeWidth(rate) {
 <style scoped>
 .sector {
   min-width: 320px;
-  background: linear-gradient(150% 120% at 100% 0%, var(--bg-elevated), var(--bg-surface));
   transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base);
 }
 .sector:hover {

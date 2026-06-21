@@ -14,13 +14,97 @@ body {
 }
 
 body {
-  background: var(--bg-base);
+  font-family:
+    'Pretendard Variable',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    sans-serif;
+  background: var(--bg-default);
   color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism Weather Themes */
+.theme-light {
+  color: #1a1a1a;
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-tertiary: rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(0, 0, 0, 0.15);
+  --bg-base: rgba(255, 255, 255, 0.4);
+  --bg-surface: var(--glass-bg);
+  --bg-elevated: var(--glass-bg);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+}
+
+.theme-dark {
+  color: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --glass-bg: rgba(0, 0, 0, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --bg-base: rgba(0, 0, 0, 0.4);
+  --bg-surface: var(--glass-bg);
+  --bg-elevated: var(--glass-bg);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+}
+
+.weather-bg {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  transition: background-image 0.5s ease-in-out;
+}
+
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15vw;
+  max-width: 80px;
+  height: 40vh;
+  display: flex;
+  align-items: center;
+  font-size: 40px;
+  color: inherit;
+  opacity: 0.05;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  transition: opacity 0.3s;
+  z-index: 10;
+}
+.nav-arrow.left {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+.nav-arrow.right {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+.nav-arrow:hover, .nav-arrow:active {
+  opacity: 0.2;
 }
 
 a {
@@ -74,10 +158,12 @@ p {
 
 /* 카드 기본 */
 .card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  border: 1px solid var(--glass-border, var(--border-subtle));
   border-radius: var(--radius-lg);
   padding: var(--space-5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* 스크롤바 (다크) */
