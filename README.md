@@ -85,3 +85,4 @@ Issue 기반 개발: 모든 작업은 Issue 생성 후 진행하며, [feat], [fi
 Branch 전략: master 브랜치 직접 Push를 금지하며, 태그/#이슈번호-기능명 형태의 Feature Branch 전략을 사용합니다.
 
 Commit 메시지: {이모지} {태그}: [{기능명}] 커밋 메세지 (#이슈번호) 형식을 준수합니다. (예: ✨ feat: [stock-chart] 차트 시각화 기능 구현 (#12))
+
