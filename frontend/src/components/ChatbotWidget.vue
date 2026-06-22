@@ -98,15 +98,13 @@ function onSubmit() {
 
 /* 플로팅 버튼 */
 .fab {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: none;
   padding: 0;
-  background: var(--bg-elevated);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  background: transparent;
   cursor: pointer;
-  overflow: hidden;
   transition: transform var(--dur-fast) var(--ease-out);
 }
 .fab:hover {

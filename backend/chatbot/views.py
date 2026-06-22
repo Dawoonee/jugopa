@@ -34,7 +34,7 @@ def chat(request):
 		guard = check_guardrail(message)
 		if not guard['result']:
 			return Response({'allowed': False, 'reason': guard['reason'], 'reply': REFUSAL_REPLY})
-		reply = chat_completion([*history, {'role': 'user', 'content': message}])
+		reply = chat_completion([{'role': 'user', 'content': message}])
 	except GmsError as exc:
 		return Response({'detail': f'챗봇 연결에 실패했어요: {exc}'}, status=status.HTTP_502_BAD_GATEWAY)
 

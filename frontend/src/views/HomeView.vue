@@ -61,9 +61,9 @@ onMounted(async () => {
     <section class="home-sectors">
       <h2 class="section-title">관심 기반 추천 업종</h2>
       <div v-if="loading" class="sector-skeleton">
-        <Skeleton v-for="n in 2" :key="n" height="260px" radius="var(--radius-lg)" />
+        <Skeleton v-for="n in 3" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
-      <div v-else-if="recommendCards.length" class="carousel">
+      <div v-else-if="recommendCards.length" class="card-grid">
         <SectorCard v-for="c in recommendCards.slice(0, 3)" :key="c.sector_name" :card="c" />
       </div>
     </section>
@@ -108,18 +108,14 @@ onMounted(async () => {
 }
 .sector-skeleton {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
 }
-.carousel {
-  display: flex;
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
-  overflow-x: auto;
   padding-bottom: var(--space-3);
-  scroll-snap-type: x mandatory;
-}
-.carousel > * {
-  scroll-snap-align: start;
 }
 .idx-skeleton {
   display: grid;
@@ -129,6 +125,9 @@ onMounted(async () => {
 @media (max-width: 767px) {
   .idx-skeleton {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .sector-skeleton, .card-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

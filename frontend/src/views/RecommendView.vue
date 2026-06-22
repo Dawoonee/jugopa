@@ -110,10 +110,10 @@ watch(activeSector, async (id) => {
     <section class="sectors">
       <h2 class="section-title">관심 기반 추천 업종</h2>
       <div v-if="loading" class="sector-skeleton">
-        <Skeleton v-for="n in 2" :key="n" height="260px" radius="var(--radius-lg)" />
+        <Skeleton v-for="n in 3" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
       <EmptyState v-else-if="!cards.length" icon="📰" title="추천 섹터가 아직 없어요" />
-      <div v-else class="carousel">
+      <div v-else class="card-grid">
         <SectorCard v-for="c in cards.slice(0, 3)" :key="c.sector_name" :card="c" />
       </div>
     </section>
@@ -202,15 +202,16 @@ watch(activeSector, async (id) => {
   gap: 8px;
   padding: var(--space-2);
 }
-.carousel {
-  display: flex;
+.sector-skeleton, .card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
-  overflow-x: auto;
   padding-bottom: var(--space-3);
-  scroll-snap-type: x mandatory;
 }
-.carousel > * {
-  scroll-snap-align: start;
+@media (max-width: 767px) {
+  .sector-skeleton, .card-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .more-wrap {
   padding: var(--space-2) 0 0;
