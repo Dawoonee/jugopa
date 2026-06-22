@@ -61,7 +61,8 @@ function gaugeWidth(rate) {
 
 <style scoped>
 .sector {
-  min-width: 320px;
+  width: 320px;
+  flex: 0 0 320px;
   display: flex;
   flex-direction: column;
   height: 100%;

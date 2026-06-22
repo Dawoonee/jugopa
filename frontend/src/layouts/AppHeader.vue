@@ -39,8 +39,7 @@ function onLogout() {
   <header class="header">
     <div class="header-inner">
       <RouterLink :to="{ name: 'home' }" class="logo">
-        <span class="logo-badge">주</span>
-        <span class="logo-text">주고파</span>
+        <img src="@/assets/logo.png" alt="주고파 로고" class="logo-img" />
       </RouterLink>
 
       <nav class="gnb">
@@ -56,22 +55,25 @@ function onLogout() {
       </nav>
 
       <div class="user-area">
-        <button
-          class="avatar"
-          :class="{ 'avatar--user': auth.isAuthenticated }"
-          type="button"
-          :aria-label="auth.isAuthenticated ? '마이페이지' : '로그인'"
-          @click="goAuth"
-        >
-          <BaseAvatar
-            v-if="auth.isAuthenticated"
-            :src="auth.user?.profile_image"
-            :text="initial"
-            :size="38"
-          />
-          <template v-else>로그인</template>
-        </button>
-        <button v-if="auth.isAuthenticated" class="logout" type="button" @click="onLogout">로그아웃</button>
+        <template v-if="auth.isAuthenticated">
+          <button
+            class="avatar avatar--user"
+            type="button"
+            aria-label="마이페이지"
+            @click="goAuth"
+          >
+            <BaseAvatar
+              :src="auth.user?.profile_image"
+              :text="initial"
+              :size="38"
+            />
+          </button>
+          <button class="logout" type="button" @click="onLogout">로그아웃</button>
+        </template>
+        <template v-else>
+          <button class="auth-btn signup-btn" type="button" @click="router.push({ name: 'signup' })">회원가입</button>
+          <button class="auth-btn login-btn" type="button" @click="goAuth">로그인</button>
+        </template>
       </div>
     </div>
   </header>
@@ -83,8 +85,9 @@ function onLogout() {
   top: 0;
   z-index: 50;
   height: var(--header-height);
-  background: rgba(14, 17, 22, 0.82);
-  backdrop-filter: blur(12px);
+  background: #ffffff;
+  color: #1a1a1a;
+  --text-primary: #1a1a1a;
   border-bottom: 1px solid var(--border-subtle);
 }
 .header-inner {
@@ -102,18 +105,9 @@ function onLogout() {
   gap: var(--space-2);
   font-weight: 800;
 }
-.logo-badge {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  background: linear-gradient(135deg, var(--accent), #5aa0ff);
-  color: #fff;
-  font-size: 15px;
-}
-.logo-text {
-  font-size: 17px;
+.logo-img {
+  height: 38px;
+  width: auto;
 }
 .gnb {
   display: flex;
@@ -175,6 +169,31 @@ function onLogout() {
 .logout:hover {
   color: var(--danger);
   border-color: var(--danger);
+}
+.auth-btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.login-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+.login-btn:hover {
+  background: var(--accent-strong);
+}
+.signup-btn {
+  background: transparent;
+  color: #1a1a1a;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.signup-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 /* 모바일: GNB는 하단 탭바로 대체 → 헤더는 로고 + 아바타만 */
 @media (max-width: 767px) {

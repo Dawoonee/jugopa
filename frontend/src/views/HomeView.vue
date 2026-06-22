@@ -57,9 +57,9 @@ onMounted(async () => {
       <MarketIndexGrid v-else :indices="indices" />
     </section>
 
-    <!-- 날씨 기반 추천 섹터 -->
+    <!-- 관심 기반 추천 업종 -->
     <section class="home-sectors">
-      <h2 class="section-title">날씨 기반 추천 섹터</h2>
+      <h2 class="section-title">관심 기반 추천 업종</h2>
       <div v-if="loading" class="sector-skeleton">
         <Skeleton v-for="n in 2" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
@@ -68,9 +68,6 @@ onMounted(async () => {
       </div>
     </section>
 
-    <RouterLink :to="{ name: 'mypage' }" class="scroll-hint">
-      마이페이지 보기 <span class="chev">⌄</span>
-    </RouterLink>
   </div>
 </template>
 
@@ -128,23 +125,6 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-3);
-}
-.scroll-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: var(--space-7);
-  color: var(--text-tertiary);
-  font-size: 13px;
-  font-weight: 600;
-}
-.chev {
-  animation: bob 1.6s ease-in-out infinite;
-}
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(3px); }
 }
 @media (max-width: 767px) {
   .idx-skeleton {

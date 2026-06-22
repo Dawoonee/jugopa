@@ -1,26 +1,43 @@
 <script setup>
 defineProps({
-  weather: { type: Object, default: null }, // { weather_status, weather_emoji, message }
+  weather: { type: Object, default: null }, // { weather_status, weather_emoji, message, score? }
 })
 
 const moodMap = {
-  VERY_SUNNY: { title: '매우 맑음 ☀️', tone: 'very_sunny' },
-  SUNNY: { title: '오늘은 맑음 🌤️', tone: 'sunny' },
-  CLOUDY: { title: '흐림 ☁️', tone: 'cloudy' },
-  RAINY: { title: '비 🌧️', tone: 'rainy' },
-  STORMY: { title: '비+천둥 ⛈️', tone: 'stormy' },
+  VERY_SUNNY: { title: '매우 맑음 ☀️', tone: 'very_sunny', score: 100 },
+  SUNNY: { title: '오늘은 맑음 🌤️', tone: 'sunny', score: 75 },
+  CLOUDY: { title: '흐림 ☁️', tone: 'cloudy', score: 50 },
+  RAINY: { title: '비 🌧️', tone: 'rainy', score: 25 },
+  STORMY: { title: '비+천둥 ⛈️', tone: 'stormy', score: 0 },
 }
 function mood(status) {
-  return moodMap[status] || { title: '시장 분석 중 ☁️', tone: 'cloudy' }
+  return moodMap[status] || { title: '시장 분석 중 ☁️', tone: 'cloudy', score: 50 }
 }
 </script>
 
 <template>
   <div v-if="weather" class="mood" :class="`mood--${mood(weather.weather_status).tone}`">
-    <div class="emoji">{{ weather.weather_emoji }}</div>
-    <div class="mood-text">
-      <p class="mood-title">{{ mood(weather.weather_status).title }}</p>
-      <p class="mood-msg">{{ weather.message }}</p>
+    <div class="mood-left">
+      <div class="emoji">{{ weather.weather_emoji }}</div>
+      <div class="mood-text">
+        <p class="mood-title">{{ mood(weather.weather_status).title }}</p>
+        <p class="mood-msg">{{ weather.message }}</p>
+      </div>
+    </div>
+
+    <div class="mood-right">
+      <div class="gauge-grid">
+        <span class="gauge-icon">☀️</span>
+        <div class="gauge-track">
+          <!-- indicator arrow -->
+          <div 
+            class="gauge-indicator" 
+            :style="{ left: `${100 - (weather.score ?? mood(weather.weather_status).score)}%` }"
+          ></div>
+        </div>
+        <span class="gauge-icon sun-icon">⛈️</span>
+        <div class="gauge-label">맑음 수치 ({{ weather.score ?? mood(weather.weather_status).score }}%)</div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,43 +46,113 @@ function mood(status) {
 .mood {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-5);
-  padding: var(--space-6);
+  padding: var(--space-5) var(--space-6);
   border-radius: var(--radius-xl);
-  /* Glassmorphism Effect */
-  background: var(--glass-bg, rgba(255, 255, 255, 0.4));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
+
+.mood-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
 .emoji {
-  font-size: 64px;
+  font-size: 56px;
   line-height: 1;
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
   animation: float 3.5s ease-in-out infinite;
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
+
+.mood-text {
+  color: #1a1a1a;
+}
 .mood-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
 }
 .mood-msg {
-  margin-top: 6px;
-  color: inherit;
-  opacity: 0.85;
+  margin-top: 4px;
+  color: #6b7684;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
+
+.mood-right {
+  flex: 1;
+  max-width: 450px;
+  margin-left: auto;
+}
+
+.gauge-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0 12px;
+}
+
+.gauge-icon {
+  font-size: 32px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+}
+.sun-icon {
+  font-size: 36px;
+}
+
+.gauge-track {
+  position: relative;
+  height: 24px;
+  border-radius: 12px;
+  background: linear-gradient(to right, #dd6b20 0%, #ed8936 20%, #f6ad55 40%, #fbd38d 70%, #e2e8f0 100%);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.gauge-indicator {
+  position: absolute;
+  bottom: -10px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid #dd6b20;
+  transform: translateX(-50%);
+  transition: left 1s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.gauge-label {
+  grid-column: 2;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4e5968;
+}
+
 @media (max-width: 767px) {
   .mood {
     flex-direction: column;
+    align-items: stretch;
     text-align: center;
-    gap: var(--space-4);
-    padding: var(--space-5);
+    gap: var(--space-5);
+  }
+  .mood-left {
+    flex-direction: column;
+  }
+  .mood-right {
+    max-width: 100%;
+    margin-left: 0;
+  }
+  .gauge-label {
+    text-align: left;
   }
 }
 </style>

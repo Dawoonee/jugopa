@@ -159,7 +159,7 @@ function onBlur() {
   transition: background var(--dur-fast);
 }
 .result-item:hover {
-  background: var(--bg-hover);
+  background: var(--accent-soft);
 }
 .result-name {
   font-weight: 700;
