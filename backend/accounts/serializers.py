@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'nickname', 'created_at',
-                  'profile_image', 'interest_sectors', 'interest_sector_names')
+                  'profile_image', 'interest_sectors', 'interest_sector_names', 'investment_type')
         # id, username, 생성일은 수정할 수 없도록 읽기 전용 처리
         read_only_fields = ('id', 'username', 'created_at')
 

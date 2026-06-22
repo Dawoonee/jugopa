@@ -15,6 +15,7 @@ import MedalShelf from '@/components/MedalShelf.vue'
 import FollowListModal from '@/components/FollowListModal.vue'
 import { useCountUp } from '@/composables/useCountUp'
 import { useWeatherTheme } from '@/composables/useWeatherTheme'
+import { animalMap } from '@/constants/animals'
 
 const auth = useAuthStore()
 const toast = useToastStore()
@@ -73,6 +74,14 @@ function onUpdated() {
   showEdit.value = false
   toast.show('프로필을 수정했어요', 'success')
 }
+
+function startTest() {
+  router.push({ name: 'investment-test' })
+}
+
+function getAnimalImage(code) {
+  return new URL(`../assets/animal/${code}.png`, import.meta.url).href
+}
 </script>
 
 <template>
@@ -102,6 +111,32 @@ function onUpdated() {
       <div class="stat card">
         <span class="stat-num num">{{ bookmarkCount.display.value }}</span>
         <span class="stat-label">관심 종목</span>
+      </div>
+    </section>
+
+    <!-- 생존 동물 성향 테스트 -->
+    <section class="card animal-card">
+      <div v-if="user?.investment_type" class="animal-result">
+        <div class="animal-header">
+          <h2 class="block-title">나의 생존 동물</h2>
+          <BaseButton variant="outline" @click="startTest">다시 하기</BaseButton>
+        </div>
+        <div class="animal-content">
+          <div class="animal-image-wrap">
+            <img :src="getAnimalImage(user.investment_type)" class="animal-img" />
+          </div>
+          <div class="animal-info">
+            <h3 class="animal-name">{{ animalMap[user.investment_type]?.name }}</h3>
+            <p class="animal-desc">{{ animalMap[user.investment_type]?.desc }}</p>
+          </div>
+        </div>
+      </div>
+      <div v-else class="animal-cta">
+        <div class="cta-text">
+          <h2 class="block-title">야생의 주식장, 나의 생존 동물은?</h2>
+          <p>내 주식 성향을 찰떡같은 동물로 알아보세요!</p>
+        </div>
+        <BaseButton @click="startTest">테스트 시작하기</BaseButton>
       </div>
     </section>
 
@@ -323,9 +358,88 @@ function onUpdated() {
   color: var(--text-secondary);
   font-size: 14px;
 }
+
+/* 동물 테스트 카드 */
+.animal-card {
+  margin-bottom: var(--space-4);
+  padding: var(--space-5);
+}
+.animal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+.animal-header .block-title {
+  margin: 0;
+}
+.animal-content {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  background-color: #f8fafc;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+.animal-image-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.animal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.animal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.animal-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0;
+}
+.animal-desc {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.animal-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0fdf4;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+}
+.cta-text p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
 @media (max-width: 767px) {
   .cols {
     grid-template-columns: 1fr;
+  }
+  .animal-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .animal-cta {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-4);
   }
 }
 </style>

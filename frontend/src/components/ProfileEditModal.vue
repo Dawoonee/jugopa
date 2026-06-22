@@ -112,7 +112,7 @@ async function save() {
 </script>
 
 <template>
-  <BaseModal :model-value="true" title="회원 정보 수정" @update:model-value="emit('update:modelValue', false)">
+  <BaseModal :model-value="true" title="회원 정보 수정" @update:model-value="emit('update:modelValue', false)" sheetClass="profile-edit-sheet">
     <div class="edit-form">
       <div class="avatar-edit">
         <BaseAvatar :src="avatarSrc" :text="initial" :size="88" />
@@ -194,5 +194,25 @@ async function save() {
 .foot-cancel {
   flex: 1;
   white-space: nowrap;
+}
+</style>
+
+<style>
+/* 모달 배경 흰색 강제 처리 */
+.profile-edit-sheet {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+.profile-edit-sheet .sheet-title {
+  color: #0f172a !important;
+}
+.profile-edit-sheet .x {
+  color: #64748b !important;
+}
+.profile-edit-sheet .x:hover {
+  color: #0f172a !important;
+}
+.profile-edit-sheet .label {
+  color: #475569 !important;
 }
 </style>

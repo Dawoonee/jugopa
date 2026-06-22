@@ -32,6 +32,12 @@ const routes = [
     component: () => import('@/views/MyPageView.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/test',
+    name: 'investment-test',
+    component: () => import('@/views/InvestmentTestView.vue'),
+    meta: { requiresAuth: true },
+  },
   { path: '/signup', name: 'signup', component: () => import('@/views/SignupView.vue'), meta: { guestOnly: true } },
 ]
 

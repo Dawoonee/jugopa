@@ -13,6 +13,9 @@ class User(AbstractUser):
     following = models.ManyToManyField(
         'self', symmetrical=False, related_name='followers', blank=True, verbose_name="팔로잉"
     )
+    investment_type = models.CharField(
+        max_length=5, blank=True, null=True, verbose_name="주식 성향"
+    )
 
     def __str__(self):
         return self.username
