@@ -5,6 +5,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: true },
   title: { type: String, default: '' },
   maxWidth: { type: String, default: '440px' },
+  sheetClass: { type: String, default: '' },
 })
 const emit = defineEmits(['update:modelValue', 'close'])
 
@@ -23,7 +24,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
   <Teleport to="body">
     <transition name="modal">
       <div v-if="modelValue" class="backdrop" @click.self="close">
-        <div class="sheet" role="dialog" aria-modal="true" :style="{ '--modal-max-width': maxWidth }">
+        <div class="sheet" :class="sheetClass" role="dialog" aria-modal="true" :style="{ '--modal-max-width': maxWidth }">
           <header v-if="title || $slots.header" class="sheet-head">
             <slot name="header">
               <h3 class="sheet-title">{{ title }}</h3>

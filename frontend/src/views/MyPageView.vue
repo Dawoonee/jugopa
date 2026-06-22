@@ -12,6 +12,7 @@ import BaseAvatar from '@/components/common/BaseAvatar.vue'
 import TagChip from '@/components/common/TagChip.vue'
 import AchievementCalendar from '@/components/AchievementCalendar.vue'
 import MedalShelf from '@/components/MedalShelf.vue'
+import FollowListModal from '@/components/FollowListModal.vue'
 import { useCountUp } from '@/composables/useCountUp'
 import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
@@ -26,6 +27,7 @@ const bookmarks = ref([])
 const calendar = ref({ total_solved: 0, current_streak: 0, longest_streak: 0, daily: [] })
 const showEdit = ref(false)
 const showWithdraw = ref(false)
+const showFollows = ref(false)
 
 const user = computed(() => auth.user)
 const initial = computed(() => (user.value?.nickname || user.value?.username || '·').charAt(0).toUpperCase())
@@ -89,17 +91,17 @@ function onUpdated() {
 
     <!-- 통계 -->
     <section class="stats">
+      <div class="stat card" @click="showFollows = true" style="cursor: pointer;">
+        <span class="stat-num num">{{ stats.follower_count || 0 }}</span>
+        <span class="stat-label">팔로워</span>
+      </div>
+      <div class="stat card" @click="showFollows = true" style="cursor: pointer;">
+        <span class="stat-num num">{{ stats.following_count || 0 }}</span>
+        <span class="stat-label">팔로잉</span>
+      </div>
       <div class="stat card">
         <span class="stat-num num">{{ bookmarkCount.display.value }}</span>
         <span class="stat-label">관심 종목</span>
-      </div>
-      <div class="stat card">
-        <span class="stat-num num">{{ quizCount.display.value }}</span>
-        <span class="stat-label">퀴즈 참여</span>
-      </div>
-      <div class="stat card">
-        <span class="stat-num">{{ stats.today_visited ? '✓' : '–' }}</span>
-        <span class="stat-label">오늘 방문</span>
       </div>
     </section>
 
@@ -162,6 +164,7 @@ function onUpdated() {
     </section>
 
     <ProfileEditModal v-if="showEdit" v-model="showEdit" @updated="onUpdated" />
+    <FollowListModal v-if="showFollows" @close="showFollows = false" />
 
     <BaseModal v-if="showWithdraw" v-model="showWithdraw" title="">
       <div class="withdraw">

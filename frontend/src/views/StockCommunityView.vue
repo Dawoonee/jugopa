@@ -86,7 +86,7 @@ async function submitPost() {
       <CommunityPostCard v-for="p in shown" :key="p.id" :post="p" />
     </div>
 
-    <BaseModal v-if="showWrite" v-model="showWrite" title="글쓰기">
+    <BaseModal v-if="showWrite" v-model="showWrite" title="글쓰기" sheetClass="write-modal-sheet">
       <div class="write-form">
         <BaseInput v-model="draft.title" label="제목" placeholder="제목을 입력하세요" />
         <label class="field">
@@ -163,5 +163,33 @@ async function submitPost() {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
+}
+</style>
+
+<style>
+/* 전역 스코프: 글쓰기 모달 배경색을 강제로 흰색으로 설정 (사용자 요청) */
+.write-modal-sheet {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+}
+.write-modal-sheet .sheet-title {
+  color: #0f172a !important;
+}
+.write-modal-sheet .x {
+  color: #64748b !important;
+}
+.write-modal-sheet .x:hover {
+  color: #0f172a !important;
+}
+.write-modal-sheet .field-label {
+  color: #334155 !important;
+}
+.write-modal-sheet .textarea {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+.write-modal-sheet .textarea:focus {
+  border-color: var(--accent) !important;
 }
 </style>

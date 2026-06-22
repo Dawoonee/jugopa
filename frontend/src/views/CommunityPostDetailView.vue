@@ -8,6 +8,7 @@ import BaseButton from '@/components/common/BaseButton.vue'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseModal from '@/components/common/BaseModal.vue'
 import Skeleton from '@/components/common/Skeleton.vue'
+import UserProfileModal from '@/components/UserProfileModal.vue'
 import { useWeatherTheme } from '@/composables/useWeatherTheme'
 
 const route = useRoute()
@@ -23,6 +24,17 @@ const loading = ref(true)
 const editingPost = ref(false)
 const draft = ref({ title: '', content: '' })
 const showDelete = ref(false)
+
+// 프로필 모달
+const showProfile = ref(false)
+const targetNickname = ref('')
+
+function openProfile(nickname) {
+  if (nickname) {
+    targetNickname.value = nickname
+    showProfile.value = true
+  }
+}
 
 // 댓글
 const newComment = ref('')
@@ -187,7 +199,9 @@ function formatDate(d) {
       <article class="card post">
         <header class="post-head">
           <div class="meta">
-            <span class="name">{{ post.nickname || post.username }}</span>
+            <span class="name profile-trigger-text" @click="openProfile(post.nickname || post.username)">
+              {{ post.nickname || post.username }}
+            </span>
             <span class="date num">{{ formatDate(post.created_at) }}</span>
           </div>
           <div v-if="isPostOwner && !editingPost" class="owner-actions">
@@ -238,7 +252,9 @@ function formatDate(d) {
         <ul v-if="comments.length" class="comment-list">
           <li v-for="c in comments" :key="c.id" class="comment card">
             <div class="comment-head">
-              <span class="name">{{ c.nickname || c.username }}</span>
+              <span class="name profile-trigger-text" @click="openProfile(c.nickname || c.username)">
+                {{ c.nickname || c.username }}
+              </span>
               <span class="date num">{{ formatDate(c.created_at) }}</span>
             </div>
 
@@ -278,6 +294,8 @@ function formatDate(d) {
         <BaseButton variant="destructive" block @click="removePost">삭제</BaseButton>
       </template>
     </BaseModal>
+
+    <UserProfileModal v-if="showProfile" :nickname="targetNickname" @close="showProfile = false" />
   </div>
 </template>
 
@@ -299,8 +317,14 @@ function formatDate(d) {
 .post-head {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+.profile-trigger-text {
+  cursor: pointer;
+}
+.profile-trigger-text:hover {
+  text-decoration: underline;
 }
 .meta {
   display: flex;

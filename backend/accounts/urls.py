@@ -21,4 +21,9 @@ urlpatterns = [
     path('profile/password/', views.PasswordChangeView.as_view(), name='change_password'),
     path('profile/stats/', views.ProfileStatsView.as_view(), name='profile_stats'),
     path('profile/quiz-calendar/', views.QuizCalendarView.as_view(), name='quiz_calendar'),
+    
+    # 타 유저 프로필 및 팔로우
+    path('profile/follows/', views.UserFollowListView.as_view(), name='user_follows'),
+    path('profile/<str:nickname>/', views.UserProfileDetailView.as_view(), name='user_profile_detail'),
+    path('profile/<str:nickname>/follow/', views.UserFollowView.as_view(), name='user_follow'),
 ]

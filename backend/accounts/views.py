@@ -67,6 +67,8 @@ class ProfileStatsView(APIView):
         return Response({
             'bookmark_count': user.bookmarks.count(),
             'quiz_count': user.quiz_histories.count(),
+            'follower_count': user.followers.count(),
+            'following_count': user.following.count(),
             'today_visited': True,            # 이 요청으로 오늘 방문이 보장됨
             'first_visit_today': created,     # 오늘 첫 방문이면 True
         })
@@ -157,3 +159,72 @@ class GenerateRandomPasswordView(APIView):
                 break
                 
         return Response({'recommended_password': password}, status=status.HTTP_200_OK)
+
+
+class UserProfileDetailView(APIView):
+    """
+    타 유저 프로필 조회 (프로필 사진, 닉네임, 관심 업종, 관심 종목, 팔로워/팔로잉 등)
+    """
+    permission_classes = (AllowAny,)
+
+    def get(self, request, nickname):
+        target_user = generics.get_object_or_404(User, nickname=nickname)
+        
+        interest_sectors = [{'id': s['id'], 'sector_name': s['name']} for s in target_user.interest_sectors.values('id', 'name')]
+        bookmarks = list(target_user.bookmarks.select_related('stock').values(
+            'stock__stock_code', 'stock__stock_name'
+        ))
+        
+        is_following = False
+        if request.user.is_authenticated:
+            is_following = request.user.following.filter(id=target_user.id).exists()
+            
+        return Response({
+            'nickname': target_user.nickname,
+            'profile_image': request.build_absolute_uri(target_user.profile_image.url) if target_user.profile_image else None,
+            'interest_sectors': interest_sectors,
+            'interest_stocks': bookmarks,
+            'follower_count': target_user.followers.count(),
+            'following_count': target_user.following.count(),
+            'is_following': is_following,
+        }, status=status.HTTP_200_OK)
+
+
+class UserFollowView(APIView):
+    """
+    특정 유저 팔로우/언팔로우 토글
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, nickname):
+        target_user = generics.get_object_or_404(User, nickname=nickname)
+        if target_user == request.user:
+            return Response({'detail': '자기 자신은 팔로우할 수 없습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        is_following = request.user.following.filter(id=target_user.id).exists()
+        if is_following:
+            request.user.following.remove(target_user)
+        else:
+            request.user.following.add(target_user)
+            
+        return Response({
+            'following': not is_following,
+            'follower_count': target_user.followers.count(),
+            'following_count': target_user.following.count(),
+        })
+
+class UserFollowListView(APIView):
+    """
+    내 팔로워 및 팔로잉 목록 조회
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = request.user
+        followers = [{'nickname': u.nickname, 'profile_image': request.build_absolute_uri(u.profile_image.url) if u.profile_image else None} for u in user.followers.all()]
+        following = [{'nickname': u.nickname, 'profile_image': request.build_absolute_uri(u.profile_image.url) if u.profile_image else None} for u in user.following.all()]
+
+        return Response({
+            'followers': followers,
+            'following': following
+        })

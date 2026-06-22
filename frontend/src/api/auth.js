@@ -35,4 +35,7 @@ export const authApi = {
   quizCalendar() {
     return client.get('accounts/profile/quiz-calendar/')
   },
+  getFollows() {
+    return client.get('accounts/profile/follows/')
+  },
 }

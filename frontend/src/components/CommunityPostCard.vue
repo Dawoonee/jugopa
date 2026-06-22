@@ -5,6 +5,7 @@ import { communityApi } from '@/api/community'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
 import BaseAvatar from '@/components/common/BaseAvatar.vue'
+import UserProfileModal from '@/components/UserProfileModal.vue'
 
 const props = defineProps({
   post: { type: Object, required: true },
@@ -19,6 +20,17 @@ function goDetail() {
     name: 'community-post-detail',
     params: { code: props.post.stock_code, postId: props.post.id },
   })
+}
+
+const showProfile = ref(false)
+const targetNickname = ref('')
+
+function openProfile(e, nickname) {
+  e.stopPropagation()
+  if (nickname) {
+    targetNickname.value = nickname
+    showProfile.value = true
+  }
 }
 
 const liked = ref(props.post.liked)
@@ -57,14 +69,18 @@ async function toggleLike() {
   <article class="post card">
     <div class="post-click" @click="goDetail">
       <header class="post-head">
-        <BaseAvatar
-          :src="post.profile_image"
-          :text="(post.nickname || post.username || '?').charAt(0).toUpperCase()"
-          :size="36"
-          :bg="avatarColor(post.username)"
-        />
+        <div class="profile-trigger" @click="(e) => openProfile(e, post.nickname || post.username)">
+          <BaseAvatar
+            :src="post.profile_image"
+            :text="(post.nickname || post.username || '?').charAt(0).toUpperCase()"
+            :size="36"
+            :bg="avatarColor(post.username)"
+          />
+        </div>
         <div class="meta">
-          <span class="name">{{ post.nickname || post.username }}</span>
+          <span class="name profile-trigger-text" @click="(e) => openProfile(e, post.nickname || post.username)">
+            {{ post.nickname || post.username }}
+          </span>
           <span class="date">{{ new Date(post.created_at).toLocaleDateString('ko-KR') }}</span>
         </div>
       </header>
@@ -77,6 +93,7 @@ async function toggleLike() {
       </button>
       <span class="comments num">💬 {{ post.comment_count }}</span>
     </footer>
+    <UserProfileModal v-if="showProfile" :nickname="targetNickname" @close="showProfile = false" />
   </article>
 </template>
 
@@ -100,6 +117,15 @@ async function toggleLike() {
 .meta {
   display: flex;
   flex-direction: column;
+}
+.profile-trigger {
+  cursor: pointer;
+}
+.profile-trigger-text {
+  cursor: pointer;
+}
+.profile-trigger-text:hover {
+  text-decoration: underline;
 }
 .name {
   font-weight: 700;

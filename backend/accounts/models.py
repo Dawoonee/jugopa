@@ -10,6 +10,9 @@ class User(AbstractUser):
     interest_sectors = models.ManyToManyField(
         'news.Sector', blank=True, related_name='interested_users', verbose_name="관심 업종"
     )
+    following = models.ManyToManyField(
+        'self', symmetrical=False, related_name='followers', blank=True, verbose_name="팔로잉"
+    )
 
     def __str__(self):
         return self.username
