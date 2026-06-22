@@ -184,12 +184,14 @@ async function submitPost() {
 .write-modal-sheet .field-label {
   color: #334155 !important;
 }
-.write-modal-sheet .textarea {
+.write-modal-sheet .textarea,
+.write-modal-sheet .field-input {
   background-color: #f8fafc !important;
   color: #0f172a !important;
   border-color: #cbd5e1 !important;
 }
-.write-modal-sheet .textarea:focus {
+.write-modal-sheet .textarea:focus,
+.write-modal-sheet .field-input:focus {
   border-color: var(--accent) !important;
 }
 </style>

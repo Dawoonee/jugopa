@@ -16,6 +16,14 @@ const answers = ref([])
 const saving = ref(false)
 const resultType = ref(null)
 
+const isLoadingResult = ref(false)
+const loadingImageIndex = ref(0)
+const loadingImages = [
+  new URL('../assets/meerkat_thinking.png', import.meta.url).href,
+  new URL('../assets/meerkat_thinking_more.png', import.meta.url).href,
+  new URL('../assets/meerkat_realized.png', import.meta.url).href,
+]
+
 const currentQuestion = computed(() => questions[currentStep.value])
 const resultData = computed(() => {
   if (!resultType.value) return null
@@ -35,6 +43,16 @@ async function finishTest() {
   const code = answers.value.join('')
   resultType.value = code
   saving.value = true
+
+  isLoadingResult.value = true
+  loadingImageIndex.value = 0
+
+  for (let i = 0; i < 3; i++) {
+    loadingImageIndex.value = i
+    await new Promise(resolve => setTimeout(resolve, 800))
+  }
+
+  isLoadingResult.value = false
 
   try {
     await authApi.updateProfile({ investment_type: code })
@@ -66,10 +84,21 @@ function getImageUrl(code) {
     </div>
 
     <div class="test-container card">
+      <!-- 로딩 화면 -->
+      <div v-if="isLoadingResult" class="loading-section">
+        <h3 class="loading-title">결과 분석 중...</h3>
+        <div class="image-wrapper loading-img-wrapper">
+          <img :src="loadingImages[loadingImageIndex]" alt="분석중" class="animal-img" />
+        </div>
+      </div>
+
       <!-- 퀴즈 진행 중 -->
-      <div v-if="!resultType" class="quiz-section">
-        <div class="progress-bar">
-          <div class="progress-fill" :style="{ width: `${((currentStep) / questions.length) * 100}%` }"></div>
+      <div v-else-if="!resultType" class="quiz-section">
+        <div class="progress-wrapper">
+          <div class="progress-bar">
+            <div class="progress-fill" :style="{ width: `${((currentStep + 1) / questions.length) * 100}%` }"></div>
+          </div>
+          <span class="progress-text">{{ currentStep + 1 }} / {{ questions.length }}</span>
         </div>
         <div class="question-header">
           <span class="step-badge">Q{{ currentStep + 1 }}. {{ currentQuestion.title }}</span>
@@ -156,6 +185,17 @@ function getImageUrl(code) {
   flex-direction: column;
   gap: 24px;
 }
+.progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.progress-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #64748b;
+}
 .progress-bar {
   width: 100%;
   height: 8px;
@@ -212,6 +252,34 @@ function getImageUrl(code) {
   border-color: #10b981;
   background-color: #f0fdf4;
   color: #047857;
+}
+
+/* 로딩 섹션 */
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 24px;
+  animation: fadeIn 0.5s ease;
+}
+.loading-title {
+  font-size: 24px;
+  margin: 0;
+  color: #000000;
+  font-weight: 800;
+}
+.loading-img-wrapper {
+  width: 100%;
+  max-width: 300px;
+  height: 250px;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+.loading-img-wrapper .animal-img {
+  object-fit: contain;
 }
 
 /* 결과 섹션 */
