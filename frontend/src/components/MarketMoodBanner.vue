@@ -13,6 +13,14 @@ const moodMap = {
 function mood(status) {
   return moodMap[status] || { title: '시장 분석 중 ☁️', tone: 'cloudy', score: 50 }
 }
+
+function diffClass(diff) {
+  if (diff >= 2.0) return 'diff--hot'
+  if (diff <= -2.0) return 'diff--cold'
+  if (diff > 0) return 'diff--warm'
+  if (diff < 0) return 'diff--cool'
+  return 'diff--neutral'
+}
 </script>
 
 <template>
@@ -39,6 +47,14 @@ function mood(status) {
         <div class="gauge-label">맑음 수치 ({{ weather.score ?? mood(weather.weather_status).score }}%)</div>
       </div>
     </div>
+  </div>
+
+  <div v-if="weather && weather.temp_diff !== undefined" class="diff-banner" :class="diffClass(weather.temp_diff)">
+    <div class="diff-header">
+      <span class="diff-temp">{{ weather.temp_diff > 0 ? '+' : '' }}{{ weather.temp_diff }}°C</span>
+      <h4 class="diff-title">{{ weather.diff_title }}</h4>
+    </div>
+    <p class="diff-msg">{{ weather.diff_msg }}</p>
   </div>
 </template>
 
@@ -153,6 +169,62 @@ function mood(status) {
   }
   .gauge-label {
     text-align: left;
+}
+  .diff-banner {
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
   }
+}
+
+/* 온도차 배너 스타일 */
+.diff-banner {
+  margin-top: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+.diff-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.diff-temp {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+}
+.diff-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+.diff-msg {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* 온도차에 따른 색상 테마 (글자색만 적용) */
+.diff--hot {
+  color: #c53030;
+}
+.diff--warm {
+  color: #c05621;
+}
+.diff--cool {
+  color: #166534;
+}
+.diff--cold {
+  color: #2b6cb0;
+}
+.diff--neutral {
+  color: #475569;
 }
 </style>

@@ -182,8 +182,37 @@ def market_weather_today(request):
         weather = DailyMarketWeather.objects.order_by('-target_date').first()
     if not weather:
         return Response({"detail": "산출된 투자 날씨가 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+        
     serializer = DailyMarketWeatherSerializer(weather)
-    return Response(serializer.data)
+    data = serializer.data
+    
+    # 온도차 비교 분석
+    today_rate = weather.indicator_data.get('combined_rate', 0.0) if weather.indicator_data else 0.0
+    yesterday_weather = DailyMarketWeather.objects.filter(target_date__lt=weather.target_date).order_by('-target_date').first()
+    yesterday_rate = yesterday_weather.indicator_data.get('combined_rate', 0.0) if yesterday_weather and yesterday_weather.indicator_data else 0.0
+    
+    diff = today_rate - yesterday_rate
+    data['today_temp'] = today_rate
+    data['yesterday_temp'] = yesterday_rate
+    data['temp_diff'] = round(diff, 1)
+    
+    if diff >= 2.0:
+        data['diff_title'] = '급격한 해빙기 ☀️'
+        data['diff_msg'] = f'어제보다 시장 온도가 {diff:+.1f}도 급상승하며 뜨겁게 달아오르고 있습니다.'
+    elif diff <= -2.0:
+        data['diff_title'] = '꽃샘추위 주의보 ❄️'
+        data['diff_msg'] = f'어제보다 온도가 {diff:+.1f}도 급강하했습니다. 갑작스러운 한파에 주의하세요.'
+    elif diff > 0:
+        data['diff_title'] = '완만한 기온 상승 훈풍 🌬️'
+        data['diff_msg'] = f'어제보다 {diff:+.1f}도 오르며 서서히 훈풍이 불고 있습니다.'
+    elif diff < 0:
+        data['diff_title'] = '서늘한 기운 감도는 중 ☁️'
+        data['diff_msg'] = f'어제보다 {abs(diff):.1f}도 떨어져 서늘한 바람이 붑니다.'
+    else:
+        data['diff_title'] = '정체된 기압골 ➖'
+        data['diff_msg'] = '어제와 시장 온도가 동일하게 유지되고 있습니다.'
+        
+    return Response(data)
 
 
 @api_view(['GET'])
