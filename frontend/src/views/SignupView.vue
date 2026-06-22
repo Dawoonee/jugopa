@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
 import { authApi } from '@/api/auth'
 import { newsApi } from '@/api/news'
+import { useWeatherTheme } from '@/composables/useWeatherTheme'
 import BaseInput from '@/components/common/BaseInput.vue'
 import BaseButton from '@/components/common/BaseButton.vue'
 import TagChip from '@/components/common/TagChip.vue'
@@ -24,13 +25,21 @@ const passwordMismatch = computed(
   () => !!passwordConfirm.value && form.value.password !== passwordConfirm.value,
 )
 
+const { weather, fetchWeather, themeClass, bgStyle } = useWeatherTheme()
+
 onMounted(async () => {
+  document.body.style.overflow = 'hidden'
   try {
     const { data } = await newsApi.sectors()
     sectors.value = data
   } catch (e) {
     sectors.value = []
   }
+  await fetchWeather()
+})
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = ''
 })
 
 function toggleSector(id) {
@@ -76,8 +85,10 @@ function goLogin() {
 </script>
 
 <template>
-  <div class="auth">
-    <div class="auth-card card">
+  <div class="auth page" :class="themeClass">
+    <div class="weather-bg" :style="bgStyle"></div>
+    <div class="modal-overlay">
+      <div class="auth-card login-card card">
       <h1 class="auth-title">회원가입</h1>
       <p class="auth-sub">관심 업종을 고르면 맞춤 추천을 받을 수 있어요</p>
 
@@ -125,20 +136,48 @@ function goLogin() {
         이미 계정이 있으신가요?
         <button type="button" @click="goLogin" class="link">로그인</button>
       </p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .auth {
-  min-height: calc(100vh - var(--header-height));
+  min-height: 100vh;
+  transition: color 0.5s ease;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: grid;
   place-items: center;
-  padding: var(--space-5) var(--space-4);
+  background: rgba(0, 0, 0, 0.4);
+  padding: var(--space-4);
+  animation: fadeIn 0.2s ease-out;
 }
-.auth-card {
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-card.login-card {
+  position: relative;
   width: 100%;
   max-width: 460px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--border-strong);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .auth-title {
   font-size: 26px;
@@ -203,5 +242,23 @@ function goLogin() {
 }
 .link:hover {
   text-decoration: underline;
+}
+</style>
+
+<style>
+/* 전역 스코프로 로그인/회원가입 모달 스타일 제어 */
+.auth-card.login-card {
+  background: #ffffff !important;
+  color: #1a1a1a;
+  --bg-surface: #f5f7fa;
+  --bg-elevated: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7684;
+  --text-tertiary: #8b95a1;
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+}
+.auth-card.login-card .auth-title {
+  color: #1a1a1a;
 }
 </style>

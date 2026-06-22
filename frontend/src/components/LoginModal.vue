@@ -84,14 +84,13 @@ function goSignup() {
   display: grid;
   place-items: center;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
   padding: var(--space-4);
   animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; backdrop-filter: blur(0); }
-  to { opacity: 1; backdrop-filter: blur(8px); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .auth-card.login-card {
@@ -172,13 +171,19 @@ function goSignup() {
 </style>
 
 <style>
-/* 전역 스코프로 로그인 모달 배경만 제어 (scoped 버그 방지) */
-.theme-light .auth-card.login-card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
+/* 전역 스코프로 로그인/회원가입 모달 스타일 제어 */
+.auth-card.login-card {
+  background: #ffffff !important;
+  color: #1a1a1a;
+  --bg-surface: #f5f7fa;
+  --bg-elevated: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7684;
+  --text-tertiary: #8b95a1;
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --border-subtle: rgba(0, 0, 0, 0.08);
 }
-.theme-dark .auth-card.login-card {
-  background: rgba(22, 27, 34, 0.92);
-  backdrop-filter: blur(16px);
+.auth-card.login-card .auth-title {
+  color: #1a1a1a;
 }
 </style>

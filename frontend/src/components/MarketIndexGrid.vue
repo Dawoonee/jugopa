@@ -30,8 +30,6 @@ defineProps({
   gap: 4px;
   padding: var(--space-4);
   background: var(--glass-bg, rgba(255, 255, 255, 0.4));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
   border-radius: var(--radius-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);

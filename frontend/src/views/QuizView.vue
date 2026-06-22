@@ -120,8 +120,9 @@ function optionState(opt) {
 
 <style scoped>
 .back-link {
-  display: inline-block;
-  margin-bottom: var(--space-4);
+  display: block;
+  width: fit-content;
+  margin-bottom: var(--space-6);
   color: var(--text-secondary);
   font-size: 14px;
   font-weight: 600;

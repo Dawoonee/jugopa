@@ -126,10 +126,10 @@ function onSubmit() {
   max-height: calc(100vh - 160px);
   display: flex;
   flex-direction: column;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-lg, 16px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 .panel-head {
@@ -137,15 +137,15 @@ function onSubmit() {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
-  background: rgba(14, 17, 22, 0.6);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f8f9fa;
 }
 .panel-title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   font-weight: 700;
-  color: var(--text-primary);
+  color: #1a1a1a;
 }
 .panel-title-img {
   width: 26px;
@@ -156,12 +156,15 @@ function onSubmit() {
 .panel-close {
   border: none;
   background: transparent;
-  color: var(--text-secondary);
+  color: #8b95a1;
   font-size: 15px;
   cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
 }
 .panel-close:hover {
-  color: var(--text-primary);
+  color: #1a1a1a;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .panel-body {
@@ -183,8 +186,8 @@ function onSubmit() {
 }
 .msg--bot {
   align-self: flex-start;
-  background: var(--bg-base, #1a1f27);
-  color: var(--text-primary);
+  background: #f0f2f5;
+  color: #1a1a1a;
   border-bottom-left-radius: 4px;
 }
 .msg--user {
@@ -196,11 +199,11 @@ function onSubmit() {
 .msg--system {
   align-self: center;
   background: transparent;
-  color: var(--text-secondary);
+  color: #8b95a1;
   font-size: 13px;
 }
 .msg--typing {
-  color: var(--text-secondary);
+  color: #8b95a1;
   font-style: italic;
 }
 
@@ -208,16 +211,16 @@ function onSubmit() {
   display: flex;
   gap: var(--space-2);
   padding: var(--space-3);
-  border-top: 1px solid var(--border-subtle);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 .panel-text {
   flex: 1;
   height: 38px;
   padding: 0 12px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--border-strong);
-  background: var(--bg-base, #11151b);
-  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  color: #1a1a1a;
   font-size: 14px;
 }
 .panel-text:focus {

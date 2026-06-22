@@ -52,8 +52,7 @@ const tabs = computed(() => [
     padding-bottom: env(safe-area-inset-bottom, 0px);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    background: rgba(14, 17, 22, 0.92);
-    backdrop-filter: blur(12px);
+    background: #ffffff;
     border-top: 1px solid var(--border-subtle);
   }
   .tab {

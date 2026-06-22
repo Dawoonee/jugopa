@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import { chatbotApi } from '@/api/chatbot'
 import { tokenStore } from '@/api/client'
+import { useAuthStore } from '@/stores/auth'
 
 const STORAGE_KEY = 'jugopa_chat'
 const WELCOME_TEXT = '주고파에 와주셔서 감사합니다! 무엇이 궁금하세요?'
@@ -37,9 +38,9 @@ export const useChatbotStore = defineStore('chatbot', () => {
     { deep: true },
   )
 
-  // 로그아웃(토큰 제거) 시 대화 초기화 — auth 스토어와 동일한 구독 메커니즘
-  tokenStore.subscribe(() => {
-    if (!tokenStore.access) reset()
+  // 로그인/로그아웃 시 대화 초기화
+  watch(() => useAuthStore().isAuthenticated, () => {
+    reset()
   })
 
   function reset() {

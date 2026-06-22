@@ -70,7 +70,6 @@ watch(activeSector, async (id) => {
     <div class="weather-bg" :style="bgStyle"></div>
     <RouterLink :to="{ name: 'home' }" class="nav-arrow left" aria-label="메인 페이지">‹</RouterLink>
     <header class="rec-head">
-      <span class="eyebrow">AI DAILY PICK</span>
       <h1 class="rec-title">주식 추천</h1>
       <span class="badge"><span class="dot" /> 국내 시장 분석 완료</span>
     </header>
@@ -109,7 +108,7 @@ watch(activeSector, async (id) => {
 
     <!-- 추천 섹터 -->
     <section class="sectors">
-      <h2 class="section-title">주목받는 추천 섹터</h2>
+      <h2 class="section-title">관심 기반 추천 업종</h2>
       <div v-if="loading" class="sector-skeleton">
         <Skeleton v-for="n in 2" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
