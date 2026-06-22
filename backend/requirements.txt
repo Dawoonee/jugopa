@@ -12,6 +12,9 @@ beautifulsoup4
 anthropic
 pydantic
 
+transformers
+torch
+
 
 pandas
 openpyxl

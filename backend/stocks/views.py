@@ -13,7 +13,7 @@ from .serializers import (
     MarketIndexDailySerializer, DailyMarketWeatherSerializer,
     UserBookmarkSerializer,
 )
-from .index_collector import TARGET_INDICES
+from .index_collector import TARGET_INDICES, fetch_index_history
 from .stock_fetcher import fetch_price_history, fetch_stock_by_name
 
 # 상세 페이지 시세 그래프 일수 / 신선도 가드 기준
@@ -171,6 +171,34 @@ def market_indices(request):
             indices.append(latest)
     serializer = MarketIndexDailySerializer(indices, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def market_index_detail(request, index_name):
+    """지수 상세 — 최신값 + 최근 30일 종가 추이를 반환한다.
+
+    최근 윈도우 내 데이터가 부족하면 공공API로 30일치를 백필한다(첫 로드만 외부호출).
+    """
+    if index_name not in TARGET_INDICES:
+        return Response({"detail": "지원하지 않는 지수입니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    window_start = datetime.now().date() - timedelta(days=PRICE_FRESHNESS_WINDOW_DAYS)
+    recent_count = MarketIndexDaily.objects.filter(
+        index_name=index_name, base_date__gte=window_start
+    ).count()
+    if recent_count < PRICE_FRESHNESS_MIN_COUNT:
+        fetch_index_history(index_name, PRICE_HISTORY_DAYS)
+
+    qs = MarketIndexDaily.objects.filter(index_name=index_name).order_by('-base_date')[:PRICE_HISTORY_DAYS]
+    history = sorted(qs, key=lambda r: r.base_date)
+    if not history:
+        return Response({"detail": "지수 데이터가 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({
+        "index_name": index_name,
+        "latest": MarketIndexDailySerializer(history[-1]).data,
+        "history": MarketIndexDailySerializer(history, many=True).data,
+    })
 
 
 @api_view(['GET'])

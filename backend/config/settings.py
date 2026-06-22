@@ -26,6 +26,11 @@ GMS_API_KEY = env('GMS_API_KEY', default='')
 GMS_BASE_URL = env('GMS_BASE_URL', default='')
 GMS_MODEL = env('GMS_MODEL', default='gpt-5-nano')
 
+# GMS (news 카드뉴스 요약용 — 챗봇과 별도 키). 미설정 시 챗봇 설정으로 폴백.
+GMS_API_KEY2 = env('GMS_API_KEY2', default=GMS_API_KEY)
+GMS_BASE_URL2 = env('GMS_BASE_URL2', default=GMS_BASE_URL)
+GMS_MODEL2 = env('GMS_MODEL2', default=GMS_MODEL)
+
 ALLOWED_HOSTS = []
 
 # Application definition

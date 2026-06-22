@@ -50,6 +50,12 @@ class SectorStock(models.Model):
 
 class NewsArticle(models.Model):
     """RSS로 수집한 원문 기사."""
+
+    class Sentiment(models.TextChoices):
+        POSITIVE = '긍정', '긍정'
+        NEGATIVE = '부정', '부정'
+        UNANALYZED = '미분석', '미분석'
+
     title = models.CharField(max_length=500)
     link = models.URLField(max_length=500, unique=True)  # 중복 방지 키
     summary_raw = models.TextField(blank=True)
@@ -57,6 +63,10 @@ class NewsArticle(models.Model):
     published_at = models.DateTimeField(db_index=True)
     content_hash = models.CharField(max_length=64, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    sentiment = models.CharField(  # KR-FinBert-SC 감성 분석 결과
+        max_length=10, choices=Sentiment.choices,
+        default=Sentiment.UNANALYZED, db_index=True,
+    )
 
     sectors = models.ManyToManyField(Sector, related_name='articles', blank=True)
 

@@ -5,6 +5,11 @@ const routes = [
   { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
   { path: '/recommend', name: 'recommend', component: () => import('@/views/RecommendView.vue') },
   {
+    path: '/indices/:name',
+    name: 'index-detail',
+    component: () => import('@/views/IndexDetailView.vue'),
+  },
+  {
     path: '/recommend/card/:id',
     name: 'card-news-detail',
     component: () => import('@/views/CardNewsDetailView.vue'),
