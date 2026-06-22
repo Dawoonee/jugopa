@@ -131,10 +131,15 @@ function getAnimalImage(code) {
           </div>
         </div>
       </div>
-      <div v-else class="animal-cta">
-        <div class="cta-text">
-          <h2 class="block-title">야생의 주식장, 나의 생존 동물은?</h2>
-          <p>내 주식 성향을 찰떡같은 동물로 알아보세요!</p>
+      <div v-else class="animal-cta with-image">
+        <div class="cta-left">
+          <div class="cta-img-wrap">
+            <img src="@/assets/test_card.png" alt="테스트 카드" class="cta-img" />
+          </div>
+          <div class="cta-text">
+            <h2 class="block-title">야생의 주식장, 나의 생존 동물은?</h2>
+            <p>내 주식 성향을 찰떡같은 동물로 알아보세요!</p>
+          </div>
         </div>
         <BaseButton @click="startTest">테스트 시작하기</BaseButton>
       </div>
@@ -423,6 +428,31 @@ function getAnimalImage(code) {
   padding: var(--space-5);
   border-radius: var(--radius-lg);
 }
+.animal-cta.with-image {
+  flex-direction: row;
+}
+.cta-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.cta-img-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.cta-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .cta-text p {
   margin: 4px 0 0;
   font-size: 14px;
@@ -436,7 +466,7 @@ function getAnimalImage(code) {
     flex-direction: column;
     text-align: center;
   }
-  .animal-cta {
+  .animal-cta, .cta-left {
     flex-direction: column;
     text-align: center;
     gap: var(--space-4);

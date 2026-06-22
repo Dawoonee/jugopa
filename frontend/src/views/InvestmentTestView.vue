@@ -58,6 +58,7 @@ function getImageUrl(code) {
 
 <template>
   <div class="page test-page">
+    <div class="test-bg"></div>
     <div class="test-header">
       <button class="back-btn" @click="goBack" aria-label="뒤로가기">‹</button>
       <h2 class="page-title">야생의 주식장, 나의 생존 동물은?</h2>
@@ -100,10 +101,17 @@ function getImageUrl(code) {
 </template>
 
 <style scoped>
+.test-bg {
+  position: fixed;
+  inset: 0;
+  background-image: url('@/assets/backgrounds/test_page.png');
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
 .test-page {
   min-height: 100vh;
   padding-bottom: var(--space-6);
-  background-color: #f8fafc;
 }
 .test-header {
   display: flex;
@@ -164,7 +172,8 @@ function getImageUrl(code) {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
 }
 .step-badge {
   background-color: #f0fdf4;
@@ -191,7 +200,7 @@ function getImageUrl(code) {
   border: 2px solid #e2e8f0;
   border-radius: var(--radius-lg);
   padding: 18px;
-  text-align: left;
+  text-align: center;
   font-size: 16px;
   font-weight: 700;
   color: #000000;
