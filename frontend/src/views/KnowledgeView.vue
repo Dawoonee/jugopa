@@ -31,7 +31,7 @@ onMounted(async () => {
 
 <template>
   <div class="page knowledge theme-light">
-    <div class="weather-bg" :style="{ backgroundImage: `url(${bgQuiz})`, filter: 'blur(4px)', transform: 'scale(1.02)' }"></div>
+    <div class="weather-bg" :style="{ backgroundImage: `url(${bgQuiz})`, transform: 'scale(1.02)' }"></div>
     <RouterLink :to="{ name: 'home' }" class="nav-arrow right" aria-label="메인 페이지">›</RouterLink>
     <span class="eyebrow">오늘의 경제 용어</span>
 

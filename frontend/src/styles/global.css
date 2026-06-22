@@ -37,15 +37,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism Weather Themes */
+/* Solid Weather Themes */
 .theme-light {
   color: #1a1a1a;
   --text-primary: #1a1a1a;
   --text-secondary: rgba(0, 0, 0, 0.7);
   --text-tertiary: rgba(0, 0, 0, 0.5);
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.15);
-  --bg-base: rgba(255, 255, 255, 0.4);
+  --glass-bg: #ffffff;
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --bg-base: #f5f7fa;
   --bg-surface: var(--glass-bg);
   --bg-elevated: var(--glass-bg);
   --border-subtle: rgba(0, 0, 0, 0.08);
@@ -57,9 +57,9 @@ body {
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-tertiary: rgba(255, 255, 255, 0.5);
-  --glass-bg: rgba(0, 0, 0, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --bg-base: rgba(0, 0, 0, 0.4);
+  --glass-bg: #161b22;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --bg-base: #0d1117;
   --bg-surface: var(--glass-bg);
   --bg-elevated: var(--glass-bg);
   --border-subtle: rgba(255, 255, 255, 0.08);
