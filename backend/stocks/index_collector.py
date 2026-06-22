@@ -6,7 +6,7 @@ stocks/views.py:save_stocks의 requests/parse 패턴을 따른다.
 """
 
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.conf import settings
 
@@ -77,5 +77,62 @@ def collect_indices():
 			},
 		)
 		saved.append(obj)
+
+	return saved
+
+
+def fetch_index_history(index_name, days=30):
+	"""지수명으로 최근 days(영업일) 종가를 조회해 MarketIndexDaily를 upsert하고 적재 건수를 반환한다.
+
+	collect_indices와 동일한 GetMarketIndexInfoService를 idxNm + 기준일 범위로 호출한다.
+	주말·공휴일을 감안해 days*2일 전부터 조회하고, idxNm이 정확히 일치하는 행만 적재한다.
+	네트워크/파싱 오류는 0을 반환한다(best-effort) — 백필 실패해도 상세는 누적분으로 동작한다.
+	"""
+	end_dt = datetime.now().date()
+	begin_dt = end_dt - timedelta(days=days * 2)
+	params = {
+		"serviceKey": settings.FINANCIAL_API_KEY,
+		"resultType": "json",
+		"numOfRows": days * 2,
+		"pageNo": 1,
+		"idxNm": index_name,
+		"beginBasDt": begin_dt.strftime("%Y%m%d"),
+		"endBasDt": end_dt.strftime("%Y%m%d"),
+	}
+	try:
+		response = requests.get(API_URL, params=params, timeout=30)
+		data = response.json()
+	except Exception:
+		return 0
+
+	items = data.get("response", {}).get("body", {}).get("items", {}).get("item", [])
+	if isinstance(items, dict):
+		items = [items]
+
+	saved = 0
+	for item in items:
+		# idxNm은 부분일치할 수 있으므로 정확히 일치하는 지수만 적재한다.
+		if item.get("idxNm") != index_name:
+			continue
+		close_price = _parse_float(item.get("clpr"))
+		if close_price is None:
+			continue
+		bas_dt = item.get("basDt")
+		if not bas_dt:
+			continue
+		try:
+			base_date = datetime.strptime(bas_dt, "%Y%m%d").date()
+		except ValueError:
+			continue
+		MarketIndexDaily.objects.update_or_create(
+			index_name=index_name,
+			base_date=base_date,
+			defaults={
+				"close_price": close_price,
+				"change": _parse_float(item.get("vs")) or 0.0,
+				"change_rate": _parse_float(item.get("fltRt")) or 0.0,
+			},
+		)
+		saved += 1
 
 	return saved

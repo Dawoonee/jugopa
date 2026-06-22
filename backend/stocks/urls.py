@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.stock_list_create, name='stock_list_create'),
     path('search/', views.stock_search, name='stock_search'),
     path('indices/', views.market_indices, name='market_indices'),
+    path('indices/<str:index_name>/', views.market_index_detail, name='market_index_detail'),
     path('weather/today/', views.market_weather_today, name='market_weather_today'),
     path('bookmarks/', views.bookmarks, name='bookmarks'),
     path('bookmarks/<str:stock_code>/', views.bookmark_delete, name='bookmark_delete'),

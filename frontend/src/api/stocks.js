@@ -4,6 +4,9 @@ export const stocksApi = {
   indices() {
     return client.get('stocks/indices/')
   },
+  indexDetail(name) {
+    return client.get(`stocks/indices/${encodeURIComponent(name)}/`)
+  },
   weatherToday() {
     return client.get('stocks/weather/today/')
   },

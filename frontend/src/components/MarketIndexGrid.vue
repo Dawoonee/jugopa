@@ -8,13 +8,18 @@ defineProps({
 
 <template>
   <div class="grid">
-    <div v-for="idx in indices" :key="idx.index_name" class="cell">
+    <RouterLink
+      v-for="idx in indices"
+      :key="idx.index_name"
+      :to="{ name: 'index-detail', params: { name: idx.index_name } }"
+      class="cell"
+    >
       <span class="cell-name">{{ idx.index_name }}</span>
       <span class="cell-price num">{{ formatNumber(idx.close_price, 2) }}</span>
       <span class="cell-change num" :class="changeClass(idx.change_rate)">
         {{ formatSignedNumber(idx.change, 2) }} ({{ formatSignedRate(idx.change_rate) }})
       </span>
-    </div>
+    </RouterLink>
   </div>
 </template>
 
@@ -33,6 +38,14 @@ defineProps({
   border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
   border-radius: var(--radius-md);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--dur-fast), box-shadow var(--dur-fast);
+}
+.cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 .cell-name {
   font-size: 13px;
