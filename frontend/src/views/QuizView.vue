@@ -111,7 +111,7 @@ function optionState(opt) {
       >
         {{ submitting ? '채점 중…' : '제출하기' }}
       </BaseButton>
-      <BaseButton v-else variant="secondary" block class="submit" @click="$router.push({ name: 'knowledge' })">
+      <BaseButton v-else variant="secondary" block class="submit back-btn" @click="$router.push({ name: 'knowledge' })">
         뒤로가기
       </BaseButton>
     </template>
@@ -224,5 +224,10 @@ function optionState(opt) {
 }
 .fade-enter-from {
   opacity: 0;
+}
+.back-btn:hover {
+  background: var(--accent) !important;
+  color: var(--text-on-accent) !important;
+  border-color: var(--accent) !important;
 }
 </style>
