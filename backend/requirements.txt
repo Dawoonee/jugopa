@@ -6,6 +6,13 @@ django-cors-headers
 django-environ
 Pillow
 
+# 운영 배포 (Render + Supabase Postgres/Storage)
+gunicorn
+psycopg[binary]
+whitenoise[brotli]
+django-storages
+boto3
+
 
 feedparser
 beautifulsoup4
