@@ -57,7 +57,7 @@ function onLogout() {
       <div class="user-area">
         <template v-if="auth.isAuthenticated">
           <button
-            class="avatar avatar--user"
+            class="mypage-btn"
             type="button"
             aria-label="마이페이지"
             @click="goAuth"
@@ -65,8 +65,9 @@ function onLogout() {
             <BaseAvatar
               :src="auth.user?.profile_image"
               :text="initial"
-              :size="38"
+              :size="30"
             />
+            <span class="mypage-label">마이페이지</span>
           </button>
           <button class="logout" type="button" @click="onLogout">로그아웃</button>
         </template>
@@ -146,15 +147,27 @@ function onLogout() {
 .avatar:hover {
   border-color: var(--accent);
 }
-.avatar--user {
-  min-width: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
+.mypage-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px 0 5px;
   border-radius: var(--radius-pill);
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+  transition: border-color var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
 }
-.avatar--user:hover {
-  box-shadow: 0 0 0 2px var(--accent);
+.mypage-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.mypage-label {
+  white-space: nowrap;
 }
 .logout {
   height: 38px;

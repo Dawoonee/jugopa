@@ -19,6 +19,8 @@ torch
 pandas
 openpyxl
 
+finance-datareader
+
 requests
 
 

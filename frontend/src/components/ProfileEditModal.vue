@@ -215,4 +215,34 @@ async function save() {
 .profile-edit-sheet .label {
   color: #475569 !important;
 }
+/* #3: outline 버튼(사진 변경·비밀번호 변경하기) 글자·테두리 초록 */
+.profile-edit-sheet .btn--outline {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.profile-edit-sheet .btn--outline:hover:not(:disabled) {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+/* #4: 닉네임·이메일 입력 배경 밝게 */
+.profile-edit-sheet .field-input {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+.profile-edit-sheet .field-input::placeholder {
+  color: #94a3b8 !important;
+}
+/* #4: 관심업종 칩 배경 밝게 (활성 칩은 초록 유지) */
+.profile-edit-sheet .chip {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+.profile-edit-sheet .chip.is-active {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
 </style>

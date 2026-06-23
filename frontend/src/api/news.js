@@ -16,4 +16,8 @@ export const newsApi = {
   sectorStocks(sectorId) {
     return client.get(`news/sectors/${sectorId}/stocks/`)
   },
+  // 업종 상세(더보기) — 대분류를 중분류별 그룹 트리로 반환
+  sectorBreakdown(sectorId) {
+    return client.get(`news/sectors/${sectorId}/breakdown/`)
+  },
 }

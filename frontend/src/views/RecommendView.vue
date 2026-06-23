@@ -96,7 +96,7 @@ watch(activeSector, async (id) => {
         <EmptyState v-else-if="!sectorStocks.length" icon="📭" title="등록된 종목이 없어요" />
         <template v-else>
           <StockListRow v-for="s in displayedStocks" :key="s.stock_code" :stock="s" />
-          <div v-if="sectorStocks.length > 5" class="more-wrap">
+          <div v-if="sectorStocks.length" class="more-wrap">
             <RouterLink :to="{ name: 'sector-detail', params: { id: activeSector } }" class="more-btn">
               더보기
             </RouterLink>
