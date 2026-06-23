@@ -41,6 +41,43 @@ def sector_stocks(request, sector_id):
 	})
 
 
+def _group_payload(sector):
+	"""중분류 한 곳의 종목 그룹(시총 내림차순)을 직렬화한다."""
+	links = (
+		SectorStock.objects.filter(sector=sector)
+		.select_related('stock').order_by('-stock__market_cap')
+	)
+	stocks = [_stock_payload(link.stock) for link in links]
+	return {
+		'sector_id': sector.id,
+		'sector_name': sector.name,
+		'stock_count': len(stocks),
+		'stocks': stocks,
+	}
+
+
+@api_view(['GET'])
+def sector_breakdown(request, sector_id):
+	"""업종 상세(더보기)용 — 대분류를 중분류별 그룹 트리로 반환한다.
+
+	대분류(LARGE): 자식 중분류마다 종목 그룹을 만든다(종목 0개 중분류도 헤더 포함).
+	중분류(MID): 자기 자신 1개 그룹.
+	"""
+	sector = get_object_or_404(Sector, pk=sector_id)
+	if sector.level == Sector.Level.LARGE:
+		children = sector.children.filter(level=Sector.Level.MID).order_by('display_order', 'name')
+		groups = [_group_payload(child) for child in children]
+	else:
+		groups = [_group_payload(sector)]
+	return Response({
+		'sector_id': sector.id,
+		'sector_name': sector.name,
+		'level': sector.level,
+		'total_count': sum(g['stock_count'] for g in groups),
+		'groups': groups,
+	})
+
+
 @api_view(['GET'])
 def card_news_detail(request, card_id):
 	"""카드뉴스 상세 — 단건 카드뉴스 전문(본문·핵심포인트·원문기사·TOP 종목)을 반환한다."""

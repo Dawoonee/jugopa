@@ -40,6 +40,30 @@ python manage.py setup_sectors
 python manage.py crawl_news
 ```
 
+#### 전 상장종목을 업종별로 적재 (네이버 업종 + FinanceDataReader)
+
+대표 종목(~140개)이 아니라 **코스피·코스닥 상장 전 종목(~2,600개)** 을 28개 중분류로 분류해 적재한다.
+데이터 소스:
+- **분류**: 네이버 금융 '업종분류'(GICS 79업종)를 스크래핑 → `news/naver_sector_map.py`로 WICS 28중분류 변환.
+- **시세·시가총액**: FinanceDataReader(`StockListing('KRX')`)로 종가·시총을 받아 `Stock`/`StockPriceDaily`/
+  섹터 내 rank(시총 내림차순)에 사용.
+
+> pykrx는 KRX OTP 차단 환경에서 빈 응답을 주는 일이 잦아 위 두 소스로 대체했다.
+> 네이버 업종에만 있고 시세에 없는 종목(우선주·ETN·상폐 등)과 '기타' 업종은 적재 제외된다.
+
+```bash
+python manage.py load_sectors            # 섹터 먼저(대10/중28)
+python manage.py load_all_sector_stocks  # 전 종목 수집·분류·적재
+#   옵션: --dry-run (적재 없이 통계만) / --market KOSPI
+python manage.py load_sector_stocks      # (선택) 대표 종목 rank 보강(data.go.kr)
+
+# 또는 한 번에:
+python manage.py setup_sectors --all-stocks
+```
+
+> `load_all_sector_stocks`는 `--dry-run`으로 먼저 실행해 중분류별 분류 수와 미매핑 업종을
+> 확인한 뒤, 미매핑 업종이 있으면 `news/naver_sector_map.py`의 매핑 사전을 보강하고 재실행한다.
+
 ### 픽스처 덤프
 
 ```bash

@@ -12,7 +12,7 @@ from stocks.weather import store_today_weather
 
 
 class Command(BaseCommand):
-	help = '지수 수집 → 투자 날씨 산출 → 뉴스 섹터 갱신을 순차 실행합니다.'
+	help = '지수 수집 → 투자 날씨 → 뉴스 섹터 → 전 종목 업종/시세 → 대표 종목 rank를 순차 실행합니다.'
 
 	def handle(self, *args, **options):
 		# 1. 시장 지수 수집 (코스피·코스닥)
@@ -37,15 +37,22 @@ class Command(BaseCommand):
 		# 3. 뉴스 섹터 카드뉴스 갱신 (기존 파이프라인)
 		try:
 			call_command('crawl_news')
-			self.stdout.write(self.style.SUCCESS("[3/4] 뉴스 섹터 갱신 완료"))
+			self.stdout.write(self.style.SUCCESS("[3/5] 뉴스 섹터 갱신 완료"))
 		except Exception as exc:
-			self.stdout.write(self.style.ERROR(f"[3/4] 뉴스 섹터 갱신 실패: {exc}"))
+			self.stdout.write(self.style.ERROR(f"[3/5] 뉴스 섹터 갱신 실패: {exc}"))
 
-		# 4. 섹터별 대표 종목 조회·매핑 갱신 (API로 종목 확보)
+		# 4. 전 상장종목 업종 분류·시세 갱신 (네이버 업종 + FDR)
+		try:
+			call_command('load_all_sector_stocks')
+			self.stdout.write(self.style.SUCCESS("[4/5] 전 종목 업종 매핑·시세 갱신 완료"))
+		except Exception as exc:
+			self.stdout.write(self.style.ERROR(f"[4/5] 전 종목 업종 매핑·시세 갱신 실패: {exc}"))
+
+		# 5. 섹터별 대표 종목 rank 보강 (data.go.kr API로 종목 확보)
 		try:
 			call_command('load_sector_stocks')
-			self.stdout.write(self.style.SUCCESS("[4/4] 섹터 대표 종목 매핑 갱신 완료"))
+			self.stdout.write(self.style.SUCCESS("[5/5] 섹터 대표 종목 매핑 갱신 완료"))
 		except Exception as exc:
-			self.stdout.write(self.style.ERROR(f"[4/4] 섹터 대표 종목 매핑 갱신 실패: {exc}"))
+			self.stdout.write(self.style.ERROR(f"[5/5] 섹터 대표 종목 매핑 갱신 실패: {exc}"))
 
 		self.stdout.write(self.style.SUCCESS("daily_update 완료."))

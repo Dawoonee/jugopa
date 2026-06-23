@@ -9,4 +9,5 @@ urlpatterns = [
 	path('sectors/today/', views.sectors_today, name='sectors_today'),
 	path('sectors/card/<int:card_id>/', views.card_news_detail, name='card_news_detail'),
 	path('sectors/<int:sector_id>/stocks/', views.sector_stocks, name='sector_stocks'),
+	path('sectors/<int:sector_id>/breakdown/', views.sector_breakdown, name='sector_breakdown'),
 ]
