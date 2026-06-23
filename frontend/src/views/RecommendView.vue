@@ -113,7 +113,7 @@ watch(activeSector, async (id) => {
       </div>
       <EmptyState v-else-if="!cards.length" icon="📰" title="추천 섹터가 아직 없어요" />
       <div v-else class="card-grid">
-        <SectorCard v-for="c in cards.slice(0, 3)" :key="c.sector_name" :card="c" />
+        <SectorCard v-for="c in cards.slice(0, 3)" :key="c.id" :card="c" />
       </div>
     </section>
   </div>

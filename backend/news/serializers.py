@@ -41,10 +41,9 @@ class SectorCardNewsSerializer(serializers.ModelSerializer):
 	top_stocks = serializers.SerializerMethodField()
 
 	def get_sector_name(self, obj):
-		# 관심 기반 추천 업종의 이름을 대분류(관심 업종) 기준으로 노출하기 위함
-		if obj.sector and obj.sector.parent:
-			return obj.sector.parent.name
-		return obj.sector.name
+		# 카드뉴스는 중분류(MID) 단위로 생성되므로 중분류 이름을 그대로 노출한다.
+		# (대분류로 묶으면 같은 대분류의 중분류 여러 건이 동일 이름으로 중복 표시됨)
+		return obj.sector.name if obj.sector else ''
 
 	class Meta:
 		model = SectorCardNews
