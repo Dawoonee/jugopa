@@ -19,10 +19,8 @@ const interestSectors = ref([]) // [{id, name}]
 const activeSector = ref(null)
 const sectorStocks = ref([])
 const stocksLoading = ref(false)
-const showAllStocks = ref(false)
-
 const displayedStocks = computed(() => {
-  return showAllStocks.value ? sectorStocks.value : sectorStocks.value.slice(0, 5)
+  return sectorStocks.value.slice(0, 5)
 })
 
 onMounted(async () => {
@@ -60,7 +58,6 @@ watch(activeSector, async (id) => {
     sectorStocks.value = []
   } finally {
     stocksLoading.value = false
-    showAllStocks.value = false
   }
 })
 </script>
@@ -99,8 +96,10 @@ watch(activeSector, async (id) => {
         <EmptyState v-else-if="!sectorStocks.length" icon="📭" title="등록된 종목이 없어요" />
         <template v-else>
           <StockListRow v-for="s in displayedStocks" :key="s.stock_code" :stock="s" />
-          <div v-if="sectorStocks.length > 5 && !showAllStocks" class="more-wrap">
-            <button class="more-btn" @click="showAllStocks = true">더보기</button>
+          <div v-if="sectorStocks.length > 5" class="more-wrap">
+            <RouterLink :to="{ name: 'sector-detail', params: { id: activeSector } }" class="more-btn">
+              더보기
+            </RouterLink>
           </div>
         </template>
       </div>

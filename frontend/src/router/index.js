@@ -10,6 +10,11 @@ const routes = [
     component: () => import('@/views/IndexDetailView.vue'),
   },
   {
+    path: '/sectors/:id',
+    name: 'sector-detail',
+    component: () => import('@/views/SectorDetailView.vue'),
+  },
+  {
     path: '/recommend/card/:id',
     name: 'card-news-detail',
     component: () => import('@/views/CardNewsDetailView.vue'),
@@ -44,6 +49,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   { path: '/signup', name: 'signup', component: () => import('@/views/SignupView.vue'), meta: { guestOnly: true } },
+  { path: '/landing', name: 'landing', component: () => import('@/views/LandingView.vue') },
 ]
 
 const router = createRouter({
@@ -55,6 +61,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
+  const agreedToTerms = localStorage.getItem('agreedToTerms') === 'true'
+  
+  if (!agreedToTerms && to.name !== 'landing') {
+    return { name: 'landing' }
+  }
+
   const authed = !!tokenStore.access
   if (to.meta.requiresAuth && !authed) {
     import('@/stores/auth').then(({ useAuthStore }) => {

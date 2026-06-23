@@ -33,7 +33,7 @@ def sector_stocks(request, sector_id):
 		links = SectorStock.objects.filter(sector__parent=sector)
 	else:
 		links = SectorStock.objects.filter(sector=sector)
-	links = links.select_related('stock').order_by('rank', 'sector__display_order')
+	links = links.select_related('stock').order_by('-stock__market_cap')
 	return Response({
 		'sector_id': sector.id,
 		'sector_name': sector.name,

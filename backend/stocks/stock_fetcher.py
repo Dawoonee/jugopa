@@ -57,9 +57,13 @@ def fetch_stock_by_name(name):
 	if not stock_code:
 		return None
 
-	stock, _ = Stock.objects.get_or_create(
+	stock, _ = Stock.objects.update_or_create(
 		stock_code=stock_code,
-		defaults={"stock_name": item.get("itmsNm", name), "market_type": item.get("mrktCtg", "")},
+		defaults={
+			"stock_name": item.get("itmsNm", name),
+			"market_type": item.get("mrktCtg", ""),
+			"market_cap": _parse_int(item.get("mrktTotAmt", "0")),
+		},
 	)
 
 	bas_dt = item.get("basDt")
@@ -115,10 +119,17 @@ def fetch_price_history(stock_code, days=30):
 		items = [items]
 
 	saved = 0
-	for item in items:
+	# items는 내림차순(최신순) 정렬되어 있음
+	for i, item in enumerate(items):
 		# likeSrtnCd는 부분일치이므로 정확히 일치하는 종목만 적재한다.
 		if item.get("srtnCd") != stock_code:
 			continue
+		
+		# 가장 최신 기준일(첫 번째 아이템)의 시가총액으로 Stock 갱신
+		if i == 0 and "mrktTotAmt" in item:
+			stock.market_cap = _parse_int(item.get("mrktTotAmt", "0"))
+			stock.save()
+
 		bas_dt = item.get("basDt")
 		if not bas_dt:
 			continue

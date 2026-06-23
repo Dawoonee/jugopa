@@ -7,6 +7,7 @@ class Stock(models.Model):
     stock_code = models.CharField(max_length=20, unique=True, db_index=True)
     stock_name = models.CharField(max_length=100)
     market_type = models.CharField(max_length=50)
+    market_cap = models.BigIntegerField(default=0)
 
     def __str__(self):
         return f"{self.stock_name} ({self.stock_code})"

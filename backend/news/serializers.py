@@ -36,9 +36,15 @@ def _stock_payload(stock):
 
 
 class SectorCardNewsSerializer(serializers.ModelSerializer):
-	sector_name = serializers.CharField(source='sector.name', read_only=True)
+	sector_name = serializers.SerializerMethodField()
 	representative_articles = RepresentativeArticleSerializer(many=True, read_only=True)
 	top_stocks = serializers.SerializerMethodField()
+
+	def get_sector_name(self, obj):
+		# 관심 기반 추천 업종의 이름을 대분류(관심 업종) 기준으로 노출하기 위함
+		if obj.sector and obj.sector.parent:
+			return obj.sector.parent.name
+		return obj.sector.name
 
 	class Meta:
 		model = SectorCardNews
