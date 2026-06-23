@@ -111,7 +111,7 @@ jugopa/
 
 
 ## 🗄️ ERD (데이터베이스 모델링)
-<!-- 교수님이 완성해 주실 ERD 이미지가 들어갈 자리입니다. -->
+![alt text](README_images/ERD.png)
 
 
 ## 🚀 설치 및 실행 방법 (Getting Started)
