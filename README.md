@@ -3,10 +3,10 @@
 # 💡 주식 고수가 되고파 (주고파)
 
 ## 👥 팀원 소개 및 역할
-**수정합시다!!**
-- 정시영
-- 정다운
-- 김수빈
+- **정시영** (Frontend / UI Design)
+- **정다운** (Backend / Data Pipeline)
+- **김수빈** (Backend / AI Integration)
+> *(※ 실제 역할에 맞게 수정해 주세요!)*
 
 
 ## 📈 서비스 소개
@@ -16,23 +16,27 @@
 
 
 ## 🎯 타깃 유저
-- 🐣 주식 입문자 : 복잡한 경제 지표와 쏟아지는 뉴스 속에서 무엇부터 봐야 할지 모르는 초보 투자자
-- 💼 기존 투자자 : 바쁜 일상 속에서 빠르게 당일의 시장 분위기와 유망 업종을 스크리닝하고 싶은 투자자
+- **🐣 주식 입문자** : 복잡한 경제 지표와 쏟아지는 뉴스 속에서 무엇부터 봐야 할지 모르는 초보 투자자
+- **💼 기존 투자자** : 바쁜 일상 속에서 빠르게 당일의 시장 분위기와 유망 업종을 스크리닝하고 싶은 투자자
 
 
-## 🖥️ 화면 구성 및 실행 화면 (UI Preview)
-**화면 설명 써주세요오**
-**1. 홈 페이지: **
-![alt text](README_images/home.png)
+## 🖥️ 화면 구성 및 주요 기능
+**1. 홈 페이지: 투자 기상도**
+코스피, 코스닥 지수를 종합 분석한 직관적인 '투자 기상도'와 최신 증시 요약을 제공합니다.
+![홈 페이지](README_images/home.png)
 
-**2. 주식 추천 페이지: **
-![alt text](README_images/stock_recommend.png)
+**2. 주식 추천 페이지: 관심 업종 & 카드뉴스**
+관심 업종의 시가총액 상위 대장주를 정렬하여 보여주며, AI 분석을 통한 유망 업종 카드뉴스를 제공합니다.
+![주식 추천 페이지](README_images/stock_recommend.png)
 
-**3. 경제 지식 페이지: **
-![alt text](README_images/quiz.png)
+**3. 경제 지식 페이지: 주린이 튜터**
+매일 제공되는 주식 용어와 퀴즈를 통해 주린이도 쉽게 경제 지식을 테스트하고 학습할 수 있습니다.
+![경제 지식 페이지](README_images/quiz.png)
 
-**4. 마이페이지: **
-![alt text](README_images/mypage.png)
+**4. 마이페이지: 투자 성향 분석**
+관심 업종 및 종목을 관리하고, 사용자 투자 성향을 분석한 사바나 동물 캐릭터 결과를 확인할 수 있습니다.
+![마이페이지](README_images/mypage.png)
+
 
 ## ✨ 핵심 기능
 **📊 1. 사용자 맞춤형 증권 대시보드**
@@ -66,81 +70,11 @@
 - 나의 투자 스타일을 재미있게 분석해 결과를 친구들과 공유하며 즐길 수 있는 강력한 바이럴(신규 사용자 유입) 포인트를 제공합니다.
 
 
-## 🛠️ 시스템 아키텍처 및 데이터 파이프라인
-**내일 그려볼까요**
+## 📂 시스템 구성도
 
+백엔드, 프론트엔드의 역할을 명확히 분리하여 관리합니다.
 
-## 🔗 주요 기술 스택
-|구분|기술 스택|
-|:---:|:---:|
-|Frontend|![vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) ![javasccript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white) ![html5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![css3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)|
-|Backend|![](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white) ![](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white) &  Django REST Framework (DRF)|
-|Database|![](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)|
-|Data Pipeline|Python (BeautifulSoup 등 크롤링 라이브러리)|
-|AI| claude API, snunlp/KR-FinBert-SC|
-|Infra / ETC|JWT (Authentication), ![](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)|
-
-
-## 🗄️ ERD (데이터베이스 모델링)
-**이건 내일 교수님이 한다고 했구**
-
-
-## 🚀 설치 및 실행 방법 (Getting Started)
-**이렇게 쓰는게 맞나 모르겠네요**
-
-**Frontend**
-> 1. node.js 설치
-> 2. `npm install`
-> 3. `npm run dev`
-
-**Backend**
-> 1. `pip install -r requirements.txt`
-> 2. `python manage.py makemigrations`
-> 3. `python manage.py migrate`
-> 4. `python manage.py loaddata fixtures/seed_data.json`
-> 5. `python manage.py runserver`
-
-
-## 📋 프로그래밍 요구 사항 및 컨벤션
-**내일 다시 쓰면서 수정해야할 것 같아요**
-
-코드 및 구조 컨벤션
-Backend: Python PEP 8 스타일 가이드를 준수하며, 코드 포맷터로 Black을 사용합니다. 클래스는 PascalCase, 변수 및 함수는 snake_case로 작성합니다. 함수의 들여쓰기(indent depth)를 최소화하여 단일 책임 원칙을 지향합니다.
-
-Frontend: Vue 3 Style Guide(Essential & Strongly Recommended)를 준수합니다. 컴포넌트 파일명은 PascalCase, 변수는 camelCase를 사용합니다.
-
-보안: API Key, DB 비밀번호, JWT 시크릿 키 등 민감 정보는 모두 .env 파일로 분리하며 .gitignore를 통해 엄격히 관리합니다.
-
-Git / GitHub 협업 규칙
-Issue 기반 개발: 모든 작업은 Issue 생성 후 진행하며, [feat], [fix] 등 태그를 명시합니다.
-
-Branch 전략: master 브랜치 직접 Push를 금지하며, 태그/#이슈번호-기능명 형태의 Feature Branch 전략을 사용합니다.
-
-Commit 메시지: {이모지} {태그}: [{기능명}] 커밋 메세지 (#이슈번호) 형식을 준수합니다. (예: ✨ feat: [stock-chart] 차트 시각화 기능 구현 (#12))
-
-
-# 📂 시스템 구성도
-**어떤 걸로 써야할까요?**
-
-백엔드, 프론트엔드, 데이터 파이프라인의 역할을 명확히 분리하여 관리합니다.
-
-```
-jugopa
- ┣ 📂 backend/               # Python, Django DRF (API 및 비즈니스 로직)
- ┃ ┣ 📂 app/                 # 핵심 도메인 로직 및 API View
- ┃ ┣ 📜 requirements.txt     # 백엔드 의존성 관리
- ┃ ┗ 📜 .env                 # 환경 변수 (Git 업로드 제외)
- ┣ 📂 frontend/              # Vue.js (SPA, 동적 차트 및 커뮤니티 UI)
- ┃ ┣ 📂 src/
- ┃ ┃ ┣ 📂 components/        # 재사용 가능한 UI 컴포넌트
- ┃ ┃ ┗ 📂 views/             # 메인 페이지 및 라우터 뷰
- ┃ ┗ 📜 package.json         # 프론트엔드 의존성 관리
- ┣ 📂 n8n/                   # 데이터 파이프라인 (자동화 스케줄러)
- ┃ ┗ 📂 workflows/           # 크롤링 및 데이터 전처리 워크플로우 JSON
- ┣ 📂 docs/                  # 기획서, 기능 명세서, API 명세서
- ┗ 📜 README.md
- ```
-```
+```text
 jugopa/
  ┣ 📂 backend/               # Python, Django DRF (API 및 비즈니스 로직)
  ┃ ┣ 📂 accounts/            # 회원 관리, JWT 인증 및 팔로우 기능
@@ -148,49 +82,97 @@ jugopa/
  ┃ ┣ 📂 community/           # 종목 토론방 및 소통형 커뮤니티 (CRUD)
  ┃ ┣ 📂 config/              # Django 메인 환경 설정 및 최상위 라우팅
  ┃ ┣ 📂 fixtures/            # 기초 주식 용어 등 초기 더미 데이터 세팅용
- ┃ ┣ 📂 news/                # 뉴스 크롤링, AI 감정 분석 및 4대 업종 추천
- ┃ ┣ 📂 stocks/              # 투자 기상도, 주가 지표 분석 및 차트 데이터
- ┃ ┣ 📂 tutors/              # 주린이 기초 가이드, 데일리 경제 퀴즈 로직
+ ┃ ┣ 📂 news/                # 뉴스 크롤링, AI 감정 분석 및 업종 추천
+ ┃ ┣ 📂 stocks/              # 투자 기상도, 시가총액, 주가 지표 분석
+ ┃ ┣ 📂 tutors/              # 주린이 기초 가이드, 데일리 경제 퀴즈
  ┃ ┣ 📂 venv/                # 파이썬 독립 가상 환경
- ┃ ┣ 📜 .env                 # 환경 변수 (API 키, DB 정보 등 / Git 업로드 제외)
+ ┃ ┣ 📜 .env                 # 환경 변수 (API 키, DB 정보 등 / Git 제외)
  ┃ ┣ 📜 db.sqlite3           # 로컬 개발 및 테스트용 데이터베이스
  ┃ ┣ 📜 manage.py            # Django 프로젝트 관리 스크립트
- ┃ ┣ 📜 pytest.ini           # 백엔드 단위 테스트 환경 설정
- ┃ ┣ 📜 README.md            # 백엔드 파트 개별 상세 가이드
  ┃ ┗ 📜 requirements.txt     # 백엔드 의존성 관리 패키지 목록
  ┃
  ┗ 📂 frontend/              # Vue.js (SPA, 동적 차트 및 커뮤니티 UI)
-   ┣ 📂 .vscode/             # 코드 에디터 워크스페이스 설정
-   ┣ 📂 e2e/                 # Playwright 기반 E2E(종단간) 테스트 코드
-   ┣ 📂 node_modules/        # 프론트엔드 설치 패키지 라이브러리
-   ┣ 📂 playwright-report/   # E2E 테스트 실행 결과 리포트
-   ┣ 📂 public/              # 파비콘 등 정적 리소스 파일
    ┣ 📂 src/                 # 프론트엔드 핵심 소스 코드 (컴포넌트, 뷰, 라우터)
-   ┣ 📂 test-results/        # 테스트 과정에서 생성된 결과물 및 아티팩트
-   ┣ 📂 tests/               # 프론트엔드 유닛 테스트 코드
-   ┣ 📜 .gitignore           # 프론트엔드 Git 버전 관리 제외 목록
    ┣ 📜 index.html           # 프론트엔드 메인 진입점 HTML
-   ┣ 📜 jsconfig.json        # 자바스크립트 절대 경로 및 컴파일러 설정
-   ┣ 📜 package-lock.json    # 패키지 버전 잠금 파일 (의존성 충돌 방지)
-   ┗ 📜 package.json         # 프론트엔드 의존성 관리 및 실행 스크립트
+   ┣ 📜 package.json         # 프론트엔드 의존성 관리 및 실행 스크립트
+   ┗ 📜 .gitignore           # 프론트엔드 Git 버전 관리 제외 목록
 ```
----
-
-# 🚀 프로젝트 목표 및 주요 구현 성과
-**이 부분은 쓸? 말?**
-
-이 프로젝트는 파편화된 외부 주식/경제 데이터를 안정적으로 수집하고, 사용자 친화적인 SPA(Single Page Application) 환경에서 직관적으로 제공하는 데 집중했습니다.
-
-데이터 파이프라인 구축: n8n을 활용하여 외부 증권 데이터 및 뉴스 키워드를 백그라운드에서 주기적으로 크롤링/적재하여 API Rate Limit 및 클라이언트 렌더링 지연 문제를 해결합니다.
-
-RESTful API 아키텍처: Django DRF를 활용하여 데이터베이스 관리, 사용자 인증(JWT), 비즈니스 로직 처리를 전담하는 안정적인 백엔드 서버를 구축합니다.
-
-직관적인 사용자 경험(UX): Vue.js 기반의 부드러운 화면 전환과 직관적인 차트 렌더링을 통해 초보 투자자도 쉽게 시장 트렌드를 파악할 수 있도록 돕습니다.
-
----
 
 
+## 🔗 주요 기술 스택
+
+|구분|기술 스택|
+|:---:|:---|
+|**Frontend**|![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)|
+|**Backend**|![Python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white) ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white) & Django REST Framework (DRF)|
+|**Database**|![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)|
+|**AI / Data**|Claude API, snunlp/KR-FinBert-SC, BeautifulSoup|
+|**Infra / ETC**|JWT (Authentication), Postman|
 
 
+## 🗄️ ERD (데이터베이스 모델링)
+<!-- 교수님이 완성해 주실 ERD 이미지가 들어갈 자리입니다. -->
 
 
+## 🚀 설치 및 실행 방법 (Getting Started)
+
+### 🖥️ Frontend
+```bash
+# 1. 프론트엔드 폴더로 이동
+$ cd frontend
+
+# 2. 필수 패키지 설치
+$ npm install
+
+# 3. 로컬 개발 서버 실행
+$ npm run dev
+```
+
+### ⚙️ Backend
+```bash
+# 1. 백엔드 폴더로 이동
+$ cd backend
+
+# 2. 파이썬 가상환경 생성 및 활성화
+$ python -m venv venv
+$ source venv/Scripts/activate  # (Windows 기준, Mac/Linux는 source venv/bin/activate)
+
+# 3. 필수 패키지 설치
+$ pip install -r requirements.txt
+
+# 4. 데이터베이스 마이그레이션 적용
+$ python manage.py makemigrations
+$ python manage.py migrate
+
+# 5. 종목 최신 시가총액 일괄 업데이트 (선택사항)
+$ python manage.py update_market_cap
+
+# 6. 초기 더미 데이터 삽입
+$ python manage.py loaddata fixtures/seed_data.json
+
+# 7. 서버 실행
+$ python manage.py runserver
+```
+
+
+## 📋 프로그래밍 요구 사항 및 컨벤션
+
+### 💻 코드 및 구조 컨벤션
+* **Backend**: Python `PEP 8` 스타일 가이드를 준수하며, 코드 포맷터로 `Black`을 사용합니다. 클래스는 `PascalCase`, 변수 및 함수는 `snake_case`로 작성합니다. 함수의 들여쓰기(indent depth)를 최소화하여 단일 책임 원칙을 지향합니다.
+* **Frontend**: `Vue 3 Style Guide (Essential & Strongly Recommended)`를 준수합니다. 컴포넌트 파일명은 `PascalCase`, 변수는 `camelCase`를 사용합니다.
+* **보안**: API Key, DB 비밀번호, JWT 시크릿 키 등 민감 정보는 모두 `.env` 파일로 분리하며 `.gitignore`를 통해 엄격히 관리합니다.
+
+### 🌿 Git / GitHub 협업 규칙
+* **Issue 기반 개발**: 모든 작업은 Issue 생성 후 진행하며, `[feat]`, `[fix]` 등 태그를 명시합니다.
+* **Branch 전략**: `master` 브랜치 직접 Push를 금지하며, `태그/#이슈번호-기능명` 형태의 Feature Branch 전략을 사용합니다.
+* **Commit 메시지**: `{이모지} {태그}: [{기능명}] 커밋 메세지 (#이슈번호)` 형식을 준수합니다. 
+  *(예: ✨ feat: [stock-chart] 차트 시각화 기능 구현 (#12))*
+
+
+## 🎯 프로젝트 목표 및 주요 구현 성과
+
+이 프로젝트는 파편화된 외부 주식 및 경제 데이터를 안정적으로 수집하고, 사용자 친화적인 **SPA(Single Page Application)** 환경에서 직관적으로 제공하는 데 집중했습니다.
+
+* **안정적인 데이터 파이프라인**: 한국투자증권 등 공공데이터 API를 연동하여 실시간 시가총액 및 증권 지표 데이터를 일괄 수집/업데이트하는 로직을 구축했습니다.
+* **RESTful API 아키텍처**: Django DRF를 활용하여 효율적인 데이터베이스 관리, 사용자 인증(JWT), 비즈니스 로직 처리를 전담하는 견고한 백엔드 서버를 구현했습니다.
+* **직관적인 사용자 경험(UX)**: Vue.js 기반의 부드러운 화면 전환과 직관적인 렌더링, 적응형(Responsive) 다크 모드 UI를 도입하여 초보 투자자도 거부감 없이 쉽게 시장 트렌드를 파악할 수 있도록 돕습니다.
