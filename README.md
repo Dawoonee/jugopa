@@ -21,8 +21,18 @@
 
 
 ## 🖥️ 화면 구성 및 실행 화면 (UI Preview)
-**내일 캡쳐해서 넣고 화면 설명 짧게 쓸게요**
+**화면 설명 써주세요오**
+**1. 홈 페이지: **
+![alt text](README_images/home.png)
 
+**2. 주식 추천 페이지: **
+![alt text](README_images/stock_recommend.png)
+
+**3. 경제 지식 페이지: **
+![alt text](README_images/quiz.png)
+
+**4. 마이페이지: **
+![alt text](README_images/mypage.png)
 
 ## ✨ 핵심 기능
 **📊 1. 사용자 맞춤형 증권 대시보드**
@@ -65,7 +75,7 @@
 |:---:|:---:|
 |Frontend|![vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) ![javasccript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white) ![html5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![css3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)|
 |Backend|![](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white) ![](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white) &  Django REST Framework (DRF)|
-|Database|![](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)|
+|Database|![](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)|
 |Data Pipeline|Python (BeautifulSoup 등 크롤링 라이브러리)|
 |AI| claude API, snunlp/KR-FinBert-SC|
 |Infra / ETC|JWT (Authentication), ![](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)|
