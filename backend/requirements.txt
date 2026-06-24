@@ -6,7 +6,7 @@ django-cors-headers
 django-environ
 Pillow
 
-# 운영 배포 (Render + Supabase Postgres/Storage)
+# Production deploy (Render + Supabase Postgres/Storage)
 gunicorn
 psycopg[binary]
 whitenoise[brotli]

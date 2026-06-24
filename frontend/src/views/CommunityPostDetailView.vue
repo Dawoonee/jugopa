@@ -236,7 +236,7 @@ function formatDate(d) {
 
       <!-- 댓글 -->
       <section class="comments">
-        <h2 class="block-title">댓글 {{ post.comment_count }}</h2>
+        <h2 class="block-title title-highlight">댓글 {{ post.comment_count }}</h2>
 
         <div v-if="auth.isAuthenticated" class="comment-write">
           <textarea

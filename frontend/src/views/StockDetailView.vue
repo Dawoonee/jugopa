@@ -106,7 +106,7 @@ async function toggleBookmark() {
 
     <template v-else-if="stock">
       <header class="detail-head">
-        <div>
+        <div class="head-info">
           <h1 class="stock-name">{{ stock.stock_name }}</h1>
           <span class="stock-code num">{{ stock.stock_code }} · {{ stock.market_type }}</span>
         </div>
@@ -184,6 +184,13 @@ async function toggleBookmark() {
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--space-4);
+}
+.head-info {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-3);
+  background: var(--title-highlight-bg);
+  color: var(--title-highlight-fg);
+  border-radius: var(--radius-md);
 }
 .stock-name {
   font-size: 24px;

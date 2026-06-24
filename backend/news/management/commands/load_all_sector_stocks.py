@@ -14,6 +14,7 @@ from django.utils import timezone
 from news.models import Sector, SectorStock
 from news.naver_sector_map import map_naver_to_wics
 from stocks import sector_universe
+from stocks.index_collector import latest_trading_date
 from stocks.models import Stock, StockPriceDaily
 
 
@@ -86,7 +87,8 @@ class Command(BaseCommand):
 	def _persist(self, classified):
 		"""Stock/시총/시세 upsert 후 섹터별 시총 내림차순 rank로 SectorStock을 갱신한다."""
 		sectors = {s.name: s for s in Sector.objects.filter(level=Sector.Level.MID)}
-		today = timezone.localdate()
+		# 시세 기준일을 지수와 통일: 최신 시장 지수 기준일(실제 거래일). 지수 미수집 시에만 실행일 폴백.
+		record_date = latest_trading_date() or timezone.localdate()
 		for mid_name, rows in classified.items():
 			sector = sectors[mid_name]
 			rows.sort(key=lambda r: r[1]['marcap'], reverse=True)
@@ -101,7 +103,7 @@ class Command(BaseCommand):
 				)
 				if info['close']:
 					StockPriceDaily.objects.update_or_create(
-						stock=stock, record_date=today,
+						stock=stock, record_date=record_date,
 						defaults={
 							'open_price': info['open'],
 							'close_price': info['close'],

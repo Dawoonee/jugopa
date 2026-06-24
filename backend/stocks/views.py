@@ -127,10 +127,15 @@ def stock_search(request):
 def stock_detail(request, stock_code):
     stock = get_object_or_404(Stock, stock_code=stock_code)
 
-    # 신선도 가드: 최근 윈도우 내 시세가 부족하면 공공API로 30일치 백필(첫 로드만 외부호출).
+    # 신선도 가드: 시세가 절대적으로 부족하거나(건수), 시장 거래일 대비 빠진 날(머리/중간 공백)이
+    # 있으면 공공API로 30일치 백필. 시장 지수 기준일을 거래일 달력으로 사용한다.
     window_start = datetime.now().date() - timedelta(days=PRICE_FRESHNESS_WINDOW_DAYS)
-    recent_count = stock.daily_prices.filter(record_date__gte=window_start).count()
-    if recent_count < PRICE_FRESHNESS_MIN_COUNT:
+    stock_days = stock.daily_prices.filter(record_date__gte=window_start).count()
+    trading_days = (
+        MarketIndexDaily.objects.filter(base_date__gte=window_start)
+        .values('base_date').distinct().count()
+    )
+    if stock_days < PRICE_FRESHNESS_MIN_COUNT or (trading_days and stock_days < trading_days):
         fetch_price_history(stock_code, PRICE_HISTORY_DAYS)
 
     serializer = StockDetailSerializer(stock, context={'price_limit': PRICE_HISTORY_DAYS})
