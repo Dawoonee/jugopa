@@ -51,7 +51,7 @@ const goBack = () => {
 
     <header class="header">
       <button class="nav-arrow left" @click="goBack" aria-label="뒤로가기">‹</button>
-      <h1 class="title">{{ sectorName || '업종 상세' }}</h1>
+      <h1 class="title title-highlight">{{ sectorName || '업종 상세' }}</h1>
     </header>
 
     <main class="content">
@@ -116,11 +116,10 @@ const goBack = () => {
 }
 
 .title {
-  width: 100%;
   text-align: center;
   font-size: 20px;
   font-weight: 800;
-  margin: 0;
+  margin: 0 auto;
 }
 
 .content {

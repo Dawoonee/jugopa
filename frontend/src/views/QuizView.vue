@@ -77,7 +77,7 @@ function optionState(opt) {
 
     <template v-else>
       <span class="eyebrow">오늘의 퀴즈</span>
-      <h1 class="quiz-q">{{ quiz.question }}</h1>
+      <h1 class="quiz-q title-highlight">{{ quiz.question }}</h1>
 
       <ul class="options">
         <li v-for="(opt, i) in quiz.options" :key="i">

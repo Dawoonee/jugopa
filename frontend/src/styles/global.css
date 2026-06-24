@@ -140,6 +140,17 @@ p {
   margin: 0;
 }
 
+/* 날씨 배경 위 제목 가독성용 아이보리 칩 — 글자 너비만 감쌈 */
+.title-highlight {
+  display: inline-block;
+  padding: 2px 10px;
+  background: var(--title-highlight-bg);
+  color: var(--title-highlight-fg);
+  border-radius: var(--radius-sm);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 /* 숫자(가격/지표/통계)는 자릿수 흔들림 방지 */
 .num {
   font-variant-numeric: tabular-nums;

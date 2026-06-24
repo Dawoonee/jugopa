@@ -79,7 +79,7 @@ function getImageUrl(code) {
     <div class="test-bg"></div>
     <div class="test-header">
       <button class="back-btn" @click="goBack" aria-label="뒤로가기">‹</button>
-      <h2 class="page-title">야생의 주식장, 나의 생존 동물은?</h2>
+      <h2 class="page-title title-highlight">야생의 주식장, 나의 생존 동물은?</h2>
       <div class="header-spacer"></div>
     </div>
 
@@ -162,7 +162,6 @@ function getImageUrl(code) {
   font-size: 18px;
   font-weight: 800;
   margin: 0;
-  color: var(--text-primary);
 }
 .header-spacer {
   width: 32px;

@@ -24,6 +24,10 @@
   --text-tertiary: #6b7684;
   --text-on-accent: #ffffff;
 
+  /* 날씨 배경 위 제목 가독성용 아이보리 칩 */
+  --title-highlight-bg: #fdf8ec;   /* 따뜻한 아이보리 */
+  --title-highlight-fg: #1a1a1a;   /* 대비용 어두운 글자 (테마 무관 고정) */
+
   /* 보더 / 구분선 */
   --border-subtle: rgba(245, 247, 250, 0.08);
   --border-strong: rgba(245, 247, 250, 0.16);
