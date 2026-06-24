@@ -66,17 +66,13 @@ watch(activeSector, async (id) => {
   <div class="page recommend" :class="themeClass">
     <div class="weather-bg" :style="bgStyle"></div>
     <RouterLink :to="{ name: 'home' }" class="nav-arrow left" aria-label="메인 페이지">‹</RouterLink>
-    <header class="rec-head">
-      <h1 class="rec-title">주식 추천</h1>
-      <span class="badge"><span class="dot" /> 국내 시장 분석 완료</span>
-    </header>
 
     <!-- 종목 검색 -->
     <StockSearchBar />
 
     <!-- 관심 업종 -->
     <section v-if="interestSectors.length" class="interest">
-      <h2 class="section-title">관심 업종</h2>
+      <h2 class="section-title title-highlight">관심 업종</h2>
       <div class="tabs">
         <button
           v-for="s in interestSectors"
@@ -107,7 +103,7 @@ watch(activeSector, async (id) => {
 
     <!-- 추천 섹터 -->
     <section class="sectors">
-      <h2 class="section-title">관심 기반 추천 업종</h2>
+      <h2 class="section-title title-highlight">뉴스로 보는 추천 업종</h2>
       <div v-if="loading" class="sector-skeleton">
         <Skeleton v-for="n in 3" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
@@ -124,12 +120,6 @@ watch(activeSector, async (id) => {
   min-height: 100vh;
   transition: color 0.5s ease;
 }
-.rec-head {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: var(--space-6);
-}
 .eyebrow {
   display: inline-block;
   padding: 6px 12px;
@@ -140,29 +130,6 @@ watch(activeSector, async (id) => {
   font-weight: 800;
   letter-spacing: 0.08em;
   margin-bottom: 8px;
-}
-.rec-title {
-  font-size: 28px;
-  font-weight: 800;
-}
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  width: fit-content;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--success);
-  animation: pulse 1.6s infinite;
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(21, 196, 126, 0.5); }
-  100% { box-shadow: 0 0 0 8px rgba(21, 196, 126, 0); }
 }
 .section-title {
   font-size: 16px;

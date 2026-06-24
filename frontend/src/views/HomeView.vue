@@ -65,28 +65,26 @@ function startTest() {
     :class="themeClass"
   >
     <div class="weather-bg" :style="bgStyle"></div>
-    <header class="home-head">
-      <RouterLink :to="{ name: 'knowledge' }" class="nav-arrow left" aria-label="경제 지식">‹</RouterLink>
-      <RouterLink :to="{ name: 'recommend' }" class="nav-arrow right" aria-label="주식 추천">›</RouterLink>
-    </header>
+    <RouterLink :to="{ name: 'knowledge' }" class="nav-arrow left" aria-label="경제 지식">‹</RouterLink>
+    <RouterLink :to="{ name: 'recommend' }" class="nav-arrow right" aria-label="주식 추천">›</RouterLink>
 
     <section class="home-mood">
-      <h2 class="section-title">{{ today }} <span class="divider">|</span> 오늘의 시장날씨</h2>
+      <h2 class="section-title title-highlight">{{ today }} <span class="divider">|</span> 오늘의 시장날씨</h2>
       <Skeleton v-if="loading" height="140px" radius="var(--radius-xl)" />
       <MarketMoodBanner v-else :weather="weather" />
     </section>
 
     <section class="home-indices">
-      <h2 class="section-title">오늘의 시장 지표</h2>
+      <h2 class="section-title title-highlight">오늘의 시장 지표</h2>
       <div v-if="loading" class="idx-skeleton">
         <Skeleton v-for="n in 4" :key="n" height="84px" radius="var(--radius-md)" />
       </div>
       <MarketIndexGrid v-else :indices="indices" />
     </section>
 
-    <!-- 관심 기반 추천 업종 -->
+    <!-- 뉴스로 보는 추천 업종 -->
     <section class="home-sectors">
-      <h2 class="section-title">관심 기반 추천 업종</h2>
+      <h2 class="section-title title-highlight">뉴스로 보는 추천 업종</h2>
       <div v-if="loading" class="sector-skeleton">
         <Skeleton v-for="n in 3" :key="n" height="260px" radius="var(--radius-lg)" />
       </div>
@@ -135,24 +133,6 @@ function startTest() {
   transition: color 0.5s ease;
 }
 
-.home-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: var(--space-5);
-  padding-top: var(--space-3);
-  height: 60px;
-}
-.home-date {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0;
-  pointer-events: none;
-}
 .section-title {
   font-size: 16px;
   font-weight: 700;

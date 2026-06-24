@@ -50,7 +50,7 @@ onMounted(async () => {
 
     <template v-else-if="detail">
       <header class="detail-head">
-        <h1 class="index-name">{{ detail.index_name }}</h1>
+        <h1 class="index-name title-highlight">{{ detail.index_name }}</h1>
         <span class="index-sub">시장 지수</span>
       </header>
 

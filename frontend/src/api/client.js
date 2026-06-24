@@ -32,8 +32,11 @@ export const tokenStore = {
   },
 }
 
+// 운영: VITE_API_BASE_URL(백엔드 절대경로), 개발: dev 프록시(`/api/v1`)
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1'
+
 const client = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -56,7 +59,7 @@ client.interceptors.response.use(
       try {
         refreshing =
           refreshing ||
-          axios.post('/api/v1/accounts/token/refresh/', { refresh: tokenStore.refresh })
+          axios.post(`${API_BASE}/accounts/token/refresh/`, { refresh: tokenStore.refresh })
         const { data } = await refreshing
         refreshing = null
         tokenStore.set({ access: data.access })

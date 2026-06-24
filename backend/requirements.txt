@@ -6,6 +6,13 @@ django-cors-headers
 django-environ
 Pillow
 
+# Production deploy (Render + Supabase Postgres/Storage)
+gunicorn
+psycopg[binary]
+whitenoise[brotli]
+django-storages
+boto3
+
 
 feedparser
 beautifulsoup4
