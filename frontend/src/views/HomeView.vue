@@ -67,11 +67,11 @@ function startTest() {
     <div class="weather-bg" :style="bgStyle"></div>
     <header class="home-head">
       <RouterLink :to="{ name: 'knowledge' }" class="nav-arrow left" aria-label="경제 지식">‹</RouterLink>
-      <p class="home-date">{{ today }}</p>
       <RouterLink :to="{ name: 'recommend' }" class="nav-arrow right" aria-label="주식 추천">›</RouterLink>
     </header>
 
     <section class="home-mood">
+      <h2 class="section-title">{{ today }} <span class="divider">|</span> 오늘의 시장날씨</h2>
       <Skeleton v-if="loading" height="140px" radius="var(--radius-xl)" />
       <MarketMoodBanner v-else :weather="weather" />
     </section>
@@ -157,6 +157,11 @@ function startTest() {
   font-size: 16px;
   font-weight: 700;
   margin-bottom: var(--space-3);
+}
+.section-title .divider {
+  color: #000000;
+  font-weight: 400;
+  margin: 0 4px;
 }
 .home-indices {
   margin-top: var(--space-6);
