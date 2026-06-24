@@ -61,6 +61,8 @@ services:
         sync: false   # 예: https://<project>.supabase.co/storage/v1/s3
       - key: AWS_S3_REGION_NAME
         sync: false   # 예: ap-northeast-2
+      - key: AWS_S3_CUSTOM_DOMAIN
+        sync: false   # 예: <project-ref>.supabase.co/storage/v1/object/public/media
 
   # ── 일배치 cron (감성/카드뉴스) ──────────────────────────────────
   # 10:30 KST = 01:30 UTC
@@ -134,4 +136,6 @@ envVarGroups:
       - key: AWS_S3_ENDPOINT_URL
         sync: false
       - key: AWS_S3_REGION_NAME
+        sync: false
+      - key: AWS_S3_CUSTOM_DOMAIN
         sync: false
