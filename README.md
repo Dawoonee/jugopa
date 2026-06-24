@@ -105,9 +105,10 @@ jugopa/
 |:---:|:---|
 |**Frontend**|![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)|
 |**Backend**|![Python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white) ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white) & Django REST Framework (DRF)|
-|**Database**|![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)|
+|**Database**|![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white) (운영: Supabase) · ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white) (로컬 개발)|
 |**AI / Data**|Claude API, snunlp/KR-FinBert-SC, BeautifulSoup|
-|**Infra / ETC**|JWT (Authentication), Postman|
+|**Infra / 배포**|![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) ![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white) · Gunicorn · WhiteNoise|
+|**ETC**|JWT (Authentication), Postman|
 
 
 ## 🗄️ ERD (데이터베이스 모델링)
@@ -153,6 +154,36 @@ $ python manage.py loaddata fixtures/seed_data.json
 # 7. 서버 실행
 $ python manage.py runserver
 ```
+
+
+## 🚀 배포 아키텍처 (Deployment)
+
+운영 환경은 **프론트엔드 / 백엔드 / DB·스토리지**를 분리하여 배포합니다.
+
+| 영역 | 플랫폼 | 역할 |
+|:---|:---|:---|
+| **Frontend** (Vue SPA) | **Vercel** | 정적 빌드(`npm run build`, `dist`) 호스팅, SPA 라우팅 |
+| **Backend** (Django + Gunicorn) | **Render** Web Service | REST API 및 비즈니스 로직 서버 |
+| **일배치** (`crawl_news`, `daily_update`) | **Render** Cron Job | 뉴스 크롤링·감정분석·시세 갱신 자동 실행 |
+| **DB** (PostgreSQL) | **Supabase** | 운영 데이터베이스 (Session pooler 연결) |
+| **미디어** (프로필 이미지) | **Supabase Storage** (S3 호환) | 사용자 업로드 이미지 저장 |
+
+```text
+[브라우저]
+    │  (정적 자산)
+    ▼
+ Vercel (Vue SPA) ──/api/v1──▶ Render (Django DRF + Gunicorn) ──▶ Supabase (PostgreSQL)
+                                      │                         └──▶ Supabase Storage (media)
+                                      └ Render Cron
+                                          ├ crawl_news    (00:00 UTC)
+                                          └ daily_update  (01:30 UTC)
+```
+
+- **배포 흐름**: build 시 `collectstatic` → preDeploy 시 `migrate`(자동) → `gunicorn` 기동
+- **시드 데이터**: 무거운 LLM/API 재호출 없이 `python manage.py loaddata fixtures/seed_data.json` **1회**로 종목·섹터·용어·퀴즈·뉴스·카드뉴스 전체 적재 (유저 데이터 제외)
+- **환경 변수**: API 키·DB 정보 등 민감 정보는 `.env` 및 Render Environment Group으로 관리 (`render.yaml` Blueprint 기반 배포)
+
+> 📖 **전체 단계별 배포 가이드**(Supabase/Render/Vercel 설정, 환경 변수 목록, 배포 후 검증 체크리스트)는 [`bapo.md`](./bapo.md)를 참고하세요.
 
 
 ## 📋 프로그래밍 요구 사항 및 컨벤션
