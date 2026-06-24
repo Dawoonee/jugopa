@@ -81,6 +81,12 @@ def collect_indices():
 	return saved
 
 
+def latest_trading_date():
+	"""가장 최근 시장 지수 기준일(실제 거래일). 데이터가 없으면 None."""
+	latest = MarketIndexDaily.objects.order_by('-base_date').first()
+	return latest.base_date if latest else None
+
+
 def fetch_index_history(index_name, days=30):
 	"""지수명으로 최근 days(영업일) 종가를 조회해 MarketIndexDaily를 upsert하고 적재 건수를 반환한다.
 
