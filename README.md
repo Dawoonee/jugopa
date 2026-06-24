@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=transparent&color=navy&height=300&section=header&text=JUGOPA%20&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=transparent&color=auto&height=300&section=header&text=JUGOPA%20&fontSize=90)
 
 # 💡 주식 고수가 되고파 (주고파)
 
