@@ -24,51 +24,59 @@ function diffClass(diff) {
 </script>
 
 <template>
-  <div v-if="weather" class="mood" :class="`mood--${mood(weather.weather_status).tone}`">
-    <div class="mood-left">
-      <div class="emoji">{{ weather.weather_emoji }}</div>
-      <div class="mood-text">
-        <p class="mood-title">{{ mood(weather.weather_status).title }}</p>
-        <p class="mood-msg">{{ weather.message }}</p>
-      </div>
-    </div>
-
-    <div class="mood-right">
-      <div class="gauge-grid">
-        <span class="gauge-icon">☀️</span>
-        <div class="gauge-track">
-          <!-- indicator arrow -->
-          <div 
-            class="gauge-indicator" 
-            :style="{ left: `${100 - (weather.score ?? mood(weather.weather_status).score)}%` }"
-          ></div>
+  <div v-if="weather" class="weather-card" :class="`mood--${mood(weather.weather_status).tone}`">
+    <div class="mood-section">
+      <div class="mood-left">
+        <div class="emoji">{{ weather.weather_emoji }}</div>
+        <div class="mood-text">
+          <p class="mood-title">{{ mood(weather.weather_status).title }}</p>
+          <p class="mood-msg">{{ weather.message }}</p>
         </div>
-        <span class="gauge-icon sun-icon">⛈️</span>
-        <div class="gauge-label">맑음 수치 ({{ weather.score ?? mood(weather.weather_status).score }}%)</div>
+      </div>
+
+      <div class="mood-right">
+        <div class="gauge-grid">
+          <span class="gauge-icon">☀️</span>
+          <div class="gauge-track">
+            <!-- indicator arrow -->
+            <div 
+              class="gauge-indicator" 
+              :style="{ left: `${100 - (weather.score ?? mood(weather.weather_status).score)}%` }"
+            ></div>
+          </div>
+          <span class="gauge-icon sun-icon">⛈️</span>
+          <div class="gauge-label">맑음 수치 ({{ weather.score ?? mood(weather.weather_status).score }}%)</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div v-if="weather && weather.temp_diff !== undefined" class="diff-banner" :class="diffClass(weather.temp_diff)">
-    <div class="diff-header">
-      <span class="diff-temp">{{ weather.temp_diff > 0 ? '+' : '' }}{{ weather.temp_diff }}°C</span>
-      <h4 class="diff-title">{{ weather.diff_title }}</h4>
+    <div v-if="weather.temp_diff !== undefined" class="diff-section" :class="diffClass(weather.temp_diff)">
+      <div class="diff-header">
+        <span class="diff-temp">{{ weather.temp_diff > 0 ? '+' : '' }}{{ weather.temp_diff }}°C</span>
+        <h4 class="diff-title">{{ weather.diff_title }}</h4>
+      </div>
+      <p class="diff-msg">{{ weather.diff_msg }}</p>
     </div>
-    <p class="diff-msg">{{ weather.diff_msg }}</p>
   </div>
 </template>
 
 <style scoped>
-.mood {
+.weather-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5) var(--space-6);
+  gap: var(--space-4);
+}
+
+.mood-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-5);
-  padding: var(--space-5) var(--space-6);
-  border-radius: var(--radius-xl);
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .mood-left {
@@ -154,7 +162,7 @@ function diffClass(diff) {
 }
 
 @media (max-width: 767px) {
-  .mood {
+  .mood-section {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
@@ -169,25 +177,21 @@ function diffClass(diff) {
   }
   .gauge-label {
     text-align: left;
-}
-  .diff-banner {
+  }
+  .diff-section {
     flex-direction: column;
     text-align: left;
     align-items: flex-start;
   }
 }
 
-/* 온도차 배너 스타일 */
-.diff-banner {
-  margin-top: var(--space-4);
-  padding: var(--space-5) var(--space-6);
-  border-radius: var(--radius-xl);
+/* 온도차 섹션 스타일 */
+.diff-section {
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 .diff-header {
   display: flex;
