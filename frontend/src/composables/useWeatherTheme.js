@@ -19,8 +19,8 @@ const themeMap = {
   VERY_SUNNY: 'theme-light',
   SUNNY: 'theme-light',
   CLOUDY: 'theme-light',
-  RAINY: 'theme-dark',
-  STORMY: 'theme-dark',
+  RAINY: 'theme-light',
+  STORMY: 'theme-light',
 }
 
 export function useWeatherTheme() {
