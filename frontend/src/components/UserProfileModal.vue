@@ -99,8 +99,8 @@ async function toggleFollow() {
 
         <h4 class="section-title mt-4">관심 종목</h4>
         <div v-if="profile.interest_stocks.length" class="badges">
-          <span v-for="stock in profile.interest_stocks" :key="stock.stock_code" class="badge">
-            {{ stock.stock_name }}
+          <span v-for="stock in profile.interest_stocks" :key="stock.stock__stock_code || stock.stock_code" class="badge">
+            {{ stock.stock__stock_name || stock.stock_name }}
           </span>
         </div>
         <p v-else class="muted-text">등록된 관심 종목이 없어요.</p>

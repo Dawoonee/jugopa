@@ -114,7 +114,7 @@ async function toggleBookmark() {
           <a class="news-link" :href="naverNewsUrl" target="_blank" rel="noopener noreferrer">
             📰 뉴스·공시
           </a>
-          <BaseButton :variant="bookmarked ? 'primary' : 'outline'" @click="toggleBookmark">
+          <BaseButton :variant="bookmarked ? 'primary' : 'secondary'" @click="toggleBookmark">
             {{ bookmarked ? '♥ 관심' : '♡ 관심' }}
           </BaseButton>
         </div>
@@ -210,14 +210,17 @@ async function toggleBookmark() {
   align-items: center;
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
   padding: 6px 10px;
   border-radius: var(--radius-sm);
-  transition: color var(--dur-fast), background var(--dur-fast);
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
 }
 .news-link:hover {
   color: var(--accent);
-  background: var(--bg-elevated);
+  border-color: var(--accent);
+  background: var(--bg-hover);
 }
 .price-card {
   display: flex;
