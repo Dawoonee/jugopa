@@ -17,8 +17,8 @@ services:
     runtime: python
     plan: free
     rootDir: backend
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-    preDeployCommand: "python manage.py migrate"
+    # free 플랜은 preDeployCommand 미지원 → migrate 를 buildCommand 에 포함
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
     startCommand: "gunicorn config.wsgi:application"
     healthCheckPath: /api/v1/
     envVars:
