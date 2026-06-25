@@ -1,16 +1,21 @@
-# Render Blueprint — Jugopa 백엔드 (Django + Gunicorn)
+# Render Blueprint — Jugopa 백엔드 (Django + Gunicorn) · 무료(Free) 구성
 # DB는 Supabase(Postgres), 미디어는 Supabase Storage(S3 호환) 사용.
 # 시크릿 값(sync:false)은 Render 대시보드 / Environment Group 에서 입력한다.
 #
-# 참고: torch/transformers(KR-FinBert) 추론이 도는 cron 은 RAM 여유가 필요하므로
-#       standard(2GB+) 이상 권장. 추론을 하지 않는 web 은 더 작은 티어도 가능.
+# [무료 구성 메모]
+#  - web 은 plan: free (15분 미사용 시 sleep, 다음 요청 때 30~60초 후 깨어남 — 시연엔 충분)
+#  - cron(crawl_news / daily_update) 은 제거 (Render cron 은 무료가 없고 torch 추론은 메모리도 큼)
+#  - 뉴스/카드뉴스 등은 배포 후 fixtures/seed_data.json 을 loaddata 로 1회 적재해 채운다.
+#  - 갱신이 필요하면 Render web 의 Shell 에서 손으로 한 번씩 실행:
+#       python manage.py crawl_news
+#       python manage.py daily_update
 
 services:
   # ── 웹 API 서비스 ────────────────────────────────────────────────
   - type: web
     name: jugopa-backend
     runtime: python
-    plan: starter
+    plan: free
     rootDir: backend
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
     preDeployCommand: "python manage.py migrate"
@@ -63,79 +68,3 @@ services:
         sync: false   # 예: ap-northeast-2
       - key: AWS_S3_CUSTOM_DOMAIN
         sync: false   # 예: <project-ref>.supabase.co/storage/v1/object/public/media
-
-  # ── 일배치 cron (감성/카드뉴스) ──────────────────────────────────
-  # 10:30 KST = 01:30 UTC
-  - type: cron
-    name: jugopa-daily-update
-    runtime: python
-    plan: standard
-    rootDir: backend
-    schedule: "30 1 * * *"
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python manage.py daily_update"
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.12"
-      - fromGroup: jugopa-backend-env
-
-  # ── 뉴스 크롤링 cron ─────────────────────────────────────────────
-  # 일배치보다 앞서 실행 (09:00 KST = 00:00 UTC)
-  - type: cron
-    name: jugopa-crawl-news
-    runtime: python
-    plan: starter
-    rootDir: backend
-    schedule: "0 0 * * *"
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python manage.py crawl_news"
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.12"
-      - fromGroup: jugopa-backend-env
-
-# cron 들이 web 과 동일한 시크릿을 공유하도록 Environment Group 사용.
-# 대시보드에서 그룹 값(DATABASE_URL, GMS_*, AWS_* 등)을 web 과 동일하게 채운다.
-envVarGroups:
-  - name: jugopa-backend-env
-    envVars:
-      - key: SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: "False"
-      - key: USE_S3
-        value: "True"
-      - key: ALLOWED_HOSTS
-        sync: false
-      - key: CSRF_TRUSTED_ORIGINS
-        sync: false
-      - key: CORS_ALLOWED_ORIGINS
-        sync: false
-      - key: DATABASE_URL
-        sync: false
-      - key: FINANCIAL_API_KEY
-        sync: false
-      - key: GMS_API_KEY
-        sync: false
-      - key: GMS_BASE_URL
-        sync: false
-      - key: GMS_MODEL
-        value: gpt-5-nano
-      - key: GMS_API_KEY2
-        sync: false
-      - key: GMS_BASE_URL2
-        sync: false
-      - key: GMS_MODEL2
-        value: gpt-5-nano
-      - key: AWS_ACCESS_KEY_ID
-        sync: false
-      - key: AWS_SECRET_ACCESS_KEY
-        sync: false
-      - key: AWS_STORAGE_BUCKET_NAME
-        sync: false
-      - key: AWS_S3_ENDPOINT_URL
-        sync: false
-      - key: AWS_S3_REGION_NAME
-        sync: false
-      - key: AWS_S3_CUSTOM_DOMAIN
-        sync: false
