@@ -77,6 +77,20 @@ class TestCommunityAPI:
         response = api_client.patch(url, data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
+    def test_post_delete_owner(self, api_client, test_user, test_post):
+        api_client.force_authenticate(user=test_user)
+        url = reverse('community:communitypost-detail', kwargs={'pk': test_post.id})
+        response = api_client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert not CommunityPost.objects.filter(id=test_post.id).exists()
+
+    def test_post_delete_not_owner(self, api_client, other_user, test_post):
+        api_client.force_authenticate(user=other_user)
+        url = reverse('community:communitypost-detail', kwargs={'pk': test_post.id})
+        response = api_client.delete(url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert CommunityPost.objects.filter(id=test_post.id).exists()
+
     def test_post_like(self, api_client, test_user, test_post):
         api_client.force_authenticate(user=test_user)
         url = reverse('community:communitypost-like', kwargs={'pk': test_post.id})
@@ -114,3 +128,33 @@ class TestCommunityAPI:
         response = api_client.post(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['liked'] is True
+
+    def test_comment_update_owner(self, api_client, test_user, test_comment):
+        api_client.force_authenticate(user=test_user)
+        url = reverse('community:communitycomment-detail', kwargs={'pk': test_comment.id})
+        data = {"content": "Updated Comment"}
+        response = api_client.patch(url, data)
+        assert response.status_code == status.HTTP_200_OK
+        test_comment.refresh_from_db()
+        assert test_comment.content == "Updated Comment"
+
+    def test_comment_update_not_owner(self, api_client, other_user, test_comment):
+        api_client.force_authenticate(user=other_user)
+        url = reverse('community:communitycomment-detail', kwargs={'pk': test_comment.id})
+        data = {"content": "Hacked Comment"}
+        response = api_client.patch(url, data)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_comment_delete_owner(self, api_client, test_user, test_comment):
+        api_client.force_authenticate(user=test_user)
+        url = reverse('community:communitycomment-detail', kwargs={'pk': test_comment.id})
+        response = api_client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert not CommunityComment.objects.filter(id=test_comment.id).exists()
+
+    def test_comment_delete_not_owner(self, api_client, other_user, test_comment):
+        api_client.force_authenticate(user=other_user)
+        url = reverse('community:communitycomment-detail', kwargs={'pk': test_comment.id})
+        response = api_client.delete(url)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert CommunityComment.objects.filter(id=test_comment.id).exists()
