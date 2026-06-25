@@ -1,14 +1,12 @@
 # Render Blueprint — Jugopa 백엔드 (Django + Gunicorn) · 무료(Free) 구성
-# DB는 Supabase(Postgres), 미디어는 Supabase Storage(S3 호환) 사용.
-# 시크릿 값(sync:false)은 Render 대시보드 / Environment Group 에서 입력한다.
+# DB는 Supabase(Postgres) 사용. 미디어는 미사용(USE_S3 미설정 → 파일시스템).
+# 데이터는 로컬 PC에서 daily_update 로 최신화 후 Supabase 에 1회 loaddata 로 적재한다.
+# (서버에서 loaddata 를 돌리면 무료 512MB 에서 OOM/멈춤 → 빌드에서 제거)
 #
 # [무료 구성 메모]
 #  - web 은 plan: free (15분 미사용 시 sleep, 다음 요청 때 30~60초 후 깨어남 — 시연엔 충분)
-#  - cron(crawl_news / daily_update) 은 제거 (Render cron 은 무료가 없고 torch 추론은 메모리도 큼)
-#  - 뉴스/카드뉴스 등은 배포 후 fixtures/seed_data.json 을 loaddata 로 1회 적재해 채운다.
-#  - 갱신이 필요하면 Render web 의 Shell 에서 손으로 한 번씩 실행:
-#       python manage.py crawl_news
-#       python manage.py daily_update
+#  - torch/transformers 는 배포 백엔드에서 불필요(daily_update 는 로컬에서만 실행) → requirements-prod.txt 사용
+#  - 시드/일배치(loaddata, daily_update)는 서버에서 돌리지 않는다.
 
 services:
   # ── 웹 API 서비스 ────────────────────────────────────────────────
@@ -17,14 +15,11 @@ services:
     runtime: python
     plan: free
     rootDir: backend
-    # free 플랜은 preDeployCommand 미지원 → migrate 를 buildCommand 에 포함
-    # loaddata 로 시드 적재 (Shell 미지원 우회). 이미 적재돼 있어도 fixture pk 고정이라 덮어씀.
-    # 시드 실패가 배포 전체를 막지 않도록 '|| true' 로 감싼다.
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && (python manage.py loaddata fixtures/seed_data.json || true)"
-    # Render 가 주입하는 $PORT 에 바인딩해야 "No open ports detected" 가 안 남
-    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
-    # healthCheckPath 는 제거: /api/v1/ 루트엔 라우트가 없고(404), 하위 경로는 인증을 요구할 수 있어
-    # 헬스체크가 계속 실패하면 배포가 Live 로 전환되지 않음. 무료 단일 서비스에선 헬스체크 없이도 정상 동작.
+    # ML 패키지(torch 등) 제외한 경량 requirements 로 빌드 → 무료 빌드 시간/디스크 초과 방지.
+    # 데이터는 Supabase 에 이미 적재돼 있으므로 loaddata 없음. migrate 는 idempotent.
+    buildCommand: "pip install -r requirements-prod.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    # Render 가 주입하는 $PORT 에 바인딩. 무료 0.1 CPU/512MB 고려해 워커 2개로 제한.
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
     envVars:
       - key: PYTHON_VERSION
         value: "3.12"
@@ -32,8 +27,10 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
-      - key: USE_S3
-        value: "True"
+      # 데이터베이스 (Supabase) — Session Pooler URI 권장 (IPv4, Render 연결용)
+      # 형식: postgresql://postgres.<ref>:<pw>@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
+      - key: DATABASE_URL
+        sync: false
       # 호스트/오리진 — 실제 도메인으로 채울 것 (콤마 구분)
       - key: ALLOWED_HOSTS
         sync: false   # 예: jugopa-backend.onrender.com
@@ -41,10 +38,7 @@ services:
         sync: false   # 예: https://jugopa-backend.onrender.com,https://jugopa.vercel.app
       - key: CORS_ALLOWED_ORIGINS
         sync: false   # 예: https://jugopa.vercel.app
-      # 데이터베이스 (Supabase) — Session Pooler URI 권장
-      - key: DATABASE_URL
-        sync: false
-      # 외부 API 키
+      # 외부 API 키 (챗봇 런타임 사용 시)
       - key: FINANCIAL_API_KEY
         sync: false
       - key: GMS_API_KEY
@@ -59,16 +53,3 @@ services:
         sync: false
       - key: GMS_MODEL2
         value: gpt-5-nano
-      # Supabase Storage (S3 호환)
-      - key: AWS_ACCESS_KEY_ID
-        sync: false
-      - key: AWS_SECRET_ACCESS_KEY
-        sync: false
-      - key: AWS_STORAGE_BUCKET_NAME
-        sync: false   # 예: media
-      - key: AWS_S3_ENDPOINT_URL
-        sync: false   # 예: https://<project>.supabase.co/storage/v1/s3
-      - key: AWS_S3_REGION_NAME
-        sync: false   # 예: ap-northeast-2
-      - key: AWS_S3_CUSTOM_DOMAIN
-        sync: false   # 예: <project-ref>.supabase.co/storage/v1/object/public/media
