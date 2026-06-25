@@ -1,12 +1,11 @@
-![header](https://capsule-render.vercel.app/api?type=transparent&color=navy&height=300&section=header&text=JUGOPA%20&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=transparent&color=auto&height=300&section=header&text=JUGOPA%20&fontSize=90)
 
 # 💡 주식 고수가 되고파 (주고파)
 
 ## 👥 팀원 소개 및 역할
-- **정시영** (Frontend / UI Design)
-- **정다운** (Backend / Data Pipeline)
-- **김수빈** (Backend / AI Integration)
-> *(※ 실제 역할에 맞게 수정해 주세요!)*
+- **정시영** (Backend / Git management)
+- **정다운** (Frontend / AI / Deploy)
+- **김수빈** (Frontend & Backend / Design / AI)
 
 
 ## 📈 서비스 소개
@@ -17,7 +16,6 @@
 
 ## 🎯 타깃 유저
 - **🐣 주식 입문자** : 복잡한 경제 지표와 쏟아지는 뉴스 속에서 무엇부터 봐야 할지 모르는 초보 투자자
-- **💼 기존 투자자** : 바쁜 일상 속에서 빠르게 당일의 시장 분위기와 유망 업종을 스크리닝하고 싶은 투자자
 
 
 ## 🖥️ 화면 구성 및 주요 기능

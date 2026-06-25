@@ -70,7 +70,7 @@ async function submitPost() {
   <div class="page community" :class="themeClass">
     <div class="weather-bg" :style="bgStyle"></div>
     <header class="comm-top">
-      <RouterLink :to="{ name: 'stock-detail', params: { code } }" class="back">‹ {{ stock?.stock_name || '종목' }}</RouterLink>
+      <button class="back" type="button" @click="$router.back()">‹ {{ stock?.stock_name || '종목' }}</button>
       <span class="count num">{{ posts.length }}개의 글</span>
     </header>
 
@@ -110,6 +110,9 @@ async function submitPost() {
   margin-bottom: var(--space-4);
 }
 .back {
+  background: none;
+  border: none;
+  padding: 0;
   color: var(--text-secondary);
   font-weight: 700;
   font-size: 15px;
